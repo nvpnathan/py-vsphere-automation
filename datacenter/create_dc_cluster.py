@@ -1,20 +1,13 @@
 #!/usr/bin/env python
 """
-Written by Michael Rice
-Github: https://github.com/michaelrice
-Website: https://michaelrice.github.io/
-Blog: http://www.errr-online.com/
+Adapted from: https://github.com/vmware/pyvmomi-community-samples/edit/master/samples/make_dc_and_cluster.py
+From vmware/pyvmomi-community-samples
 This code has been released under the terms of the Apache 2.0 license
 http://opensource.org/licenses/Apache-2.0
 """
+
 import atexit
 import os
-
-from pyvim.connect import SmartConnect, Disconnect
-
-# from tools import cluster
-# from tools import datacenter
-# from tools import cli
 
 from pyVmomi import vim, vmodl
 from pyvim import connect
@@ -26,9 +19,6 @@ inputs = {'vcenter_ip': os.environ.get('VCENTER_IP'),
           'datacenter': 'python-tmp-dc',
           'cluster': 'python-tmp-cluster'
           }
-
-
-
 
 def create_cluster(**kwargs):
     """
@@ -48,8 +38,6 @@ def create_cluster(**kwargs):
         cluster_spec = vim.cluster.ConfigSpecEx()
 
     host_folder = datacenter.hostFolder
-
-    print("Host Folder is ", host_folder)
     cluster = host_folder.CreateClusterEx(name=cluster_name, spec=cluster_spec)
     return cluster
 
