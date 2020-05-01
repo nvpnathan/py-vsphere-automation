@@ -10,11 +10,15 @@ cluster = ['pl-vlab-mgmt', 'pl-vlab-tkg', 'pl-vlab-workload']
 cl_settings = {"drs_enabled": True, "drs_automation_level": 'fullyAutomated', "ha_enabled": True, "ha_advanced_options":{'das.IgnoreInsufficientHbDatastore':'True',
         'das.IgnoreRedundantNetWarning':'True'}, "ha_admission_control_policy": 'disabled'}
 
+mgmt_Hosts = ['vlab-esx-100.vballin.com','vlab-esx-110.vballin.com','vlab-esx-120.vballin.com']
+tkg_Hosts = ['lab-esx-80.vballin.com','vlab-esx-90.vballin.com']
+workload_Hosts = ['vlab-esx-130.vballin.com','vlab-esx-140.vballin.com','vlab-esx-150.vballin.com']
+
 # Network parameters
 ## Distributed Virtual Switches
 dvs = [
-    {'name':'pl-mgmt-dvs','version': '6.5.0'}, 
-    {'name':'pl-comp-dvs'}
+    {'name':'pl-mgmt','version': '6.5.0'}, 
+    {'name':'pl-tkg'}
     ]
 
 ## MGMT DVS Portgroups
@@ -83,3 +87,28 @@ def compPG():
         mgmtPGs_list.append(mgmtpg)
     return mgmtPGs_list
 compPG()
+
+# Get Hosts
+mgmtHosts_list = []
+def get_mgmtHosts():
+    for host in mgmt_Hosts:
+        hosts = pulumi_vsphere.get_host(datacenter_id=dc_list[0].moid, name=host, opts=None)
+        mgmtHosts_list.append(hosts)
+    return mgmtHosts_list
+#get_mgmtHosts()
+
+tkgHosts_list = []
+def get_tkgHosts():
+    for host in tkg_Hosts:
+        hosts = pulumi_vsphere.get_host(datacenter_id=dc_list[0].moid, name=host, opts=None)
+        tkgHosts_list.append(hosts)
+    return tkgHosts_list
+#get_tkgHosts()
+
+workloadHosts_list = []
+def get_workloadHosts():
+    for host in workload_Hosts:
+        hosts = pulumi_vsphere.get_host(datacenter_id=dc_list[0].moid, name=host, opts=None)
+        workloadHosts_list.append(hosts)
+    return workloadHosts_list
+#get_workloadHosts()
