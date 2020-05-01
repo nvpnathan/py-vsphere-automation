@@ -1,17 +1,15 @@
-# Deploying the VCSA Appliance
+# Deploying nested ESXi hypervisors as Virtual Machines
 
 
-## Install Requirements
+## Manual Install with ovftool Requirements
 
 - This repo including the vcsa-deploy.py
-- Python 3.6.x +
-- Python libraries - pyyaml, pyvmomi, vim, platform
-- VCSA Appliance ISO
-- YAML Configuration file placed in $HOME
+- ESXi 7.0 OVA from William Lams
+- ovftool - version
 
 ### vSphere Requirements
+- vSphere 7.0 with a physical ESXi 7.0 Host
 
-The VCSA Appliance needs to be deployed onto an existing ESXi Host.
 
 ## Creating the YAML Configuration file.
 
@@ -46,10 +44,13 @@ VC_ISO_PATH: '/Users/bob/VMware-VCSA-all-7.0.0-15952498.iso'
 VC_ISO_MOUNT: "/tmp/tmp_iso"
 ```
 
+## Manual Install with ovftool Steps
 
-Once you have created your $HOME/vcsa-params.yaml, you can deploy the VCSA appliance with the following command.
 
 ```shell
+wget https://download3.vmware.com/software/vmw-tools/nested-esxi/Nested_ESXi7.0_Appliance_Template_v1.ova ~
+
+
 vcsa-deploy.py
 ```
 
