@@ -6,10 +6,14 @@ import pulumi_vsphere
 
 # Compute parameters
 dc = ['pl-dc']
-cluster = ['pl-vlab-mgmt', 'pl-vlab-tkg', 'pl-vlab-workload']
+clusters = ['pl-vlab-mgmt', 'pl-vlab-tkg', 'pl-vlab-workload']
 cl_settings = {"drs_enabled": True, "drs_automation_level": 'fullyAutomated', "ha_enabled": True, "ha_advanced_options":{'das.IgnoreInsufficientHbDatastore':'True',
         'das.IgnoreRedundantNetWarning':'True'}, "ha_admission_control_policy": 'disabled'}
 
+## Resource Pools
+resourcePools = [['pl-pks-comp','pl-pks-mgmt','pl-terraform-vms','pl-tkg-mgmt'],['pl-tkg-workload'],[]]
+
+## vSphere Hosts 
 mgmt_Hosts = ['vlab-esx-100.vballin.com','vlab-esx-110.vballin.com','vlab-esx-120.vballin.com']
 tkg_Hosts = ['lab-esx-80.vballin.com','vlab-esx-90.vballin.com']
 workload_Hosts = ['vlab-esx-130.vballin.com','vlab-esx-140.vballin.com','vlab-esx-150.vballin.com']
@@ -46,8 +50,8 @@ datacenters()
 
 ## Create vSphere Cluster(s)
 cluster_list = []
-def clusters():
-    for c in cluster:
+def cluster():
+    for c in clusters:
         compCluster = pulumi_vsphere.ComputeCluster(resource_name=c, datacenter_id=dc_list[0].moid,name=c,
             drs_enabled = cl_settings["drs_enabled"],
             drs_automation_level=cl_settings["drs_automation_level"],
@@ -56,7 +60,7 @@ def clusters():
             ha_admission_control_policy = 'disabled')
         cluster_list.append(compCluster)
     return cluster_list
-clusters()
+cluster()
 
 ## Create Virtual Distributed Switches
 dvs_list = []
@@ -112,3 +116,9 @@ def get_workloadHosts():
         workloadHosts_list.append(hosts)
     return workloadHosts_list
 #get_workloadHosts()
+
+## Create vSphere Resource Pools
+clusterRPs = dict(zip(cluster_list, resourcePools))
+for k, v in clusterRPs.items():
+    for i in v:
+        rps = pulumi_vsphere.ResourcePool(resource_name=i, name=i, parent_resource_pool_id=k.resource_pool_id)
