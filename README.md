@@ -4,7 +4,7 @@
 
 ## Python Automation components
 Can be used and run individually
-1. [Nested ESXi 7 OVA deployment](vcsa/README.md)
+1. [Nested ESXi 7 OVA deployment](esx/README.md)
 2. [VCSA Appliance Deployment](vcsa/README.md)
 3. [Datacenter & Cluster Creation](datacenter/README.md)
 4. [Distributed Switch & DVPG Creation](vds/README.md)
