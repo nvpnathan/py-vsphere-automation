@@ -11,3 +11,4 @@ Can be used and run individually
 5. Coming Soon-Mount NFS Datastore(nfs/README.md)
 6. Coming Soon-NSX Deployment(nsx/NSX-Deployment.md)
 7. Coming Soon-Install NSX Logical Configuration(nsx/NSX-Logical.md)
+8. Coming Soon-Install WCP (wcp/README.md)
