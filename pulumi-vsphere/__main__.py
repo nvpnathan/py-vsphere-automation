@@ -13,6 +13,9 @@ cl_settings = {"drs_enabled": True, "drs_automation_level": 'fullyAutomated', "h
 ## Resource Pools
 resourcePools = [['pl-pks-comp','pl-pks-mgmt','pl-terraform-vms','pl-tkg-mgmt'],['pl-tkg-workload'],[]]
 
+## VM Folders
+vm_Folders = ['pl-packer-templates', 'pl-tkg-vms', 'pl-terraform-vms']
+
 ## vSphere Hosts 
 mgmt_Hosts = ['vlab-esx-100.vballin.com','vlab-esx-110.vballin.com','vlab-esx-120.vballin.com']
 tkg_Hosts = ['lab-esx-80.vballin.com','vlab-esx-90.vballin.com']
@@ -41,16 +44,16 @@ compPGs = [
 
 ## Create Datacenter(s)
 dc_list = []
-def datacenters():
+def create_datacenters():
     for d in dc:
         datacenter = pulumi_vsphere.Datacenter(resource_name=d, name=d)
         dc_list.append(datacenter)
     return dc_list
-datacenters()
+create_datacenters()
 
 ## Create vSphere Cluster(s)
 cluster_list = []
-def cluster():
+def create_cluster():
     for c in clusters:
         compCluster = pulumi_vsphere.ComputeCluster(resource_name=c, datacenter_id=dc_list[0].moid,name=c,
             drs_enabled = cl_settings["drs_enabled"],
@@ -60,37 +63,37 @@ def cluster():
             ha_admission_control_policy = 'disabled')
         cluster_list.append(compCluster)
     return cluster_list
-cluster()
+create_cluster()
 
 ## Create Virtual Distributed Switches
 dvs_list = []
-def vds():
+def create_vds():
     for sw in dvs:
         vds = pulumi_vsphere.DistributedVirtualSwitch(resource_name=sw.get('name'), name=sw.get('name'), 
         datacenter_id=dc_list[0].moid, version=sw.get('version'), max_mtu='1600')
         dvs_list.append(vds)
     return dvs_list 
-vds()
+create_vds()
 
 ## Create MGMT DVS PortGroups
 mgmtPGs_list = []
-def mgmtPG():
+def create_mgmtPG():
     for pg in mgmtPGs:
         mgmtpg = pulumi_vsphere.DistributedPortGroup(resource_name=pg.get('name'), name=pg.get('name'), 
         distributed_virtual_switch_uuid=dvs_list[0].id, vlan_id=pg.get('vlan'))
         mgmtPGs_list.append(mgmtpg)
     return mgmtPGs_list
-mgmtPG()
+create_mgmtPG()
 
 ## Create COMP DVS PortGroups
-compPGs_list = []
+create_compPGs_list = []
 def compPG():
     for pg in compPGs:
         mgmtpg = pulumi_vsphere.DistributedPortGroup(resource_name=pg.get('name'), name=pg.get('name'), 
         distributed_virtual_switch_uuid=dvs_list[1].id, vlan_id=pg.get('vlan'), vlan_ranges=pg.get('vlan_range'))
         mgmtPGs_list.append(mgmtpg)
     return mgmtPGs_list
-compPG()
+create_compPG()
 
 # Get Hosts
 mgmtHosts_list = []
@@ -119,6 +122,20 @@ def get_workloadHosts():
 
 ## Create vSphere Resource Pools
 clusterRPs = dict(zip(cluster_list, resourcePools))
-for k, v in clusterRPs.items():
-    for i in v:
-        rps = pulumi_vsphere.ResourcePool(resource_name=i, name=i, parent_resource_pool_id=k.resource_pool_id)
+rp_list = []
+def create_clusterRP():
+    for k, v in clusterRPs.items():
+        for i in v:
+            rps = pulumi_vsphere.ResourcePool(resource_name=i, name=i, parent_resource_pool_id=k.resource_pool_id)
+            rp_list.append(rps)
+    return rp_list
+create_clusterRP()
+
+## Create vSphere Folders
+folder_list = []
+def create_folders():
+    for f in vm_Folders:
+        folders = pulumi_vsphere.Folder(resource_name=f, path=f, type='vm', datacenter_id=dc_list[0].moid)
+        folder_list.append(folders)
+    return folder_list
+create_folders()
