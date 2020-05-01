@@ -60,3 +60,5 @@ pulumi up
 Once you confirm with `yes` you will see all the Resources in your code get created.
 
 <img src="../images/pulumi_up_complete.png">
+
+To tear it all down you can simply use `pulumi destroy`.
