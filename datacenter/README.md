@@ -2,7 +2,7 @@
 
 The VCSA Appliance needs to be deployed already
 
-## Export the ENV Vars.
+### Export the ENV Vars.
 
 To deploy the VCSA appliance the deployment script needs following environment variables set:
 
@@ -13,6 +13,7 @@ export VCENTER_USER ='administrator@vsphere.local'
 
 ```
 
+### Run the DC creation script.
 Once you have exported the 3 ENV VARS you can create a new Datacenter and Cluster with DRS & HA enabled with the following command.
 
 ```shell
