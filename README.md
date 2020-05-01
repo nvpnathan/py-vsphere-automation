@@ -4,7 +4,11 @@
 
 ## Python Automation components
 Can be used and run individually
-1. [VCSA Appliance Deployment](deploy-vcsa/README.md)
-2. [Datacenter & Cluster Creation](datacenter/README.md)
-3. [Distributed Switch & DVPG Creation](vds/README.md)
-4. 
+1. [Nested ESXi 7 OVA deployment](esx/README.md)
+2. [VCSA Appliance Deployment](vcsa/README.md)
+3. [Datacenter & Cluster Creation](datacenter/README.md)
+4. [Distributed Switch & DVPG Creation](vds/README.md)
+5. Coming Soon-Mount NFS Datastore(nfs/README.md)
+6. Coming Soon-NSX Deployment(nsx/NSX-Deployment.md)
+7. Coming Soon-Install NSX Logical Configuration(nsx/NSX-Logical.md)
+8. Coming Soon-Install WCP (wcp/README.md)
