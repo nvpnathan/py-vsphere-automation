@@ -11,17 +11,20 @@ cl_settings = {"drs_enabled": True, "drs_automation_level": 'fullyAutomated', "h
         'das.IgnoreRedundantNetWarning':'True'}, "ha_admission_control_policy": 'disabled'}
 
 # Network parameters
+## Distributed Virtual Switches
 dvs = [
     {'name':'pl-mgmt-dvs','version': '6.5.0'}, 
     {'name':'pl-comp-dvs'}
     ]
 
+## MGMT DVS Portgroups
 mgmtPGs = [
     {'name':'pl-vlab-mgmt', 'vlan': '64'},
     {'name':'pl-vlab-dmz', 'vlan': '69'},
     {'name':'pl-vlab-esxi', 'vlan': '79'},
     {'name':'pl-vlab-tkg-mgmt', 'vlan': '72'}]
 
+## COMP DVS Portgroups
 compPGs = [
     {'name':'pl-edge-tunnel', 'vlan_range': [{'minVlan': '0', 'maxVlan': '4094'}]},
     {'name':'pl-edge-uplink', 'vlan_range': [{'minVlan': '0', 'maxVlan': '4094'}]},
@@ -61,6 +64,7 @@ def vds():
     return dvs_list 
 vds()
 
+## Create MGMT DVS PortGroups
 mgmtPGs_list = []
 def mgmtPG():
     for pg in mgmtPGs:
@@ -68,9 +72,9 @@ def mgmtPG():
         distributed_virtual_switch_uuid=dvs_list[0].id, vlan_id=pg.get('vlan'))
         mgmtPGs_list.append(mgmtpg)
     return mgmtPGs_list
-
 mgmtPG()
 
+## Create COMP DVS PortGroups
 compPGs_list = []
 def compPG():
     for pg in compPGs:
@@ -78,5 +82,4 @@ def compPG():
         distributed_virtual_switch_uuid=dvs_list[1].id, vlan_id=pg.get('vlan'), vlan_ranges=pg.get('vlan_range'))
         mgmtPGs_list.append(mgmtpg)
     return mgmtPGs_list
-
 compPG()
