@@ -1,11 +1,11 @@
 # Deploying nested ESXi hypervisors as Virtual Machines
 
 
-## Manual Install with ovftool Requirements
+## Requirements
 
-- This repo including the vcsa-deploy.py
-- ESXi 7.0 OVA from William Lams
-- ovftool - version
+- This repo including the esx-deploy.py
+- ESXi 7.0 OVA from William Lam's Blog
+- ovftool installed
 
 ### vSphere Requirements
 - vSphere 7.0 with a physical ESXi 7.0 Host
