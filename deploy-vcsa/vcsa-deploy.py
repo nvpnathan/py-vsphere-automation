@@ -1,12 +1,15 @@
 import json
 import os
 import platform
+import yaml
 from vcsavars import *
-#print(os.environ)
 
 currentDirectory = os.getcwd()
 
 host_os = platform.system()
+tempfile = '/tmp/vcsa_cfg.json'
+homedir = os.getenv('HOME')
+print("HOMEDIR is ", homedir)
 
 if host_os == 'Darwin':
     os.system(f"mkdir {VC_ISO_MOUNT}")
@@ -21,30 +24,36 @@ elif host_os == 'Linux':
 else:
     print(f"Unfortunately {host_os} is not supported")
 
-data['new_vcsa']['esxi']['hostname'] = ESXI_HOST
-data['new_vcsa']['esxi']['username'] = ESXI_USR
-data['new_vcsa']['esxi']['password'] = ESXI_PWD
-data['new_vcsa']['esxi']['datastore'] = ESXI_DATASTORE
-data['new_vcsa']['esxi']['deployment_network'] = VC_PORTGROUP
-data['new_vcsa']['appliance']['thin_disk_mode'] = bool(VC_THIN_PROVISION)
-data['new_vcsa']['appliance']['deployment_option'] = VC_DEPLOYMENT_SIZE
-data['new_vcsa']['appliance']['name'] = VC_NAME
-data['new_vcsa']['network']['mode'] = VC_NET_MODE
-data['new_vcsa']['network']['ip'] = VC_IP
-data['new_vcsa']['network']['dns_servers'] = [VC_DNS_SERVER]
-data['new_vcsa']['network']['prefix'] = VC_NETMASK
-data['new_vcsa']['network']['gateway'] = VC_GATEWAY
-data['new_vcsa']['network']['system_name'] = VC_SYSTEM_NAME
-data['new_vcsa']['os']['password'] = VC_ROOT_PWD
-data['new_vcsa']['os']['ntp_servers'] = VC_NTP_SERVER
-data['new_vcsa']['os']['ssh_enable'] = bool(VC_SSH_ENABLED)
-data['new_vcsa']['sso']['password'] = VC_SSO_PWD
-data['new_vcsa']['sso']['domain_name'] = VC_SSO_DOMAIN
-data['ceip']['settings']['ceip_enabled'] =  bool(CEIP_ENABLED)
+
+
+yaml_file = open(homedir+"/vcsa-params.yaml")
+cfg_yaml = yaml.load(yaml_file, Loader=yaml.FullLoader)
+print(cfg_yaml["ESXI_HOSTS"])
+
+data['new_vcsa']['esxi']['hostname'] = cfg_yaml["ESXI_HOSTS"][0]
+data['new_vcsa']['esxi']['username'] = cfg_yaml["ESXI_USR"]
+data['new_vcsa']['esxi']['password'] = cfg_yaml["ESXI_PWD"]
+data['new_vcsa']['esxi']['datastore'] = cfg_yaml["ESXI_DATASTORE"]
+data['new_vcsa']['esxi']['deployment_network'] = cfg_yaml["VC_PORTGROUP"]
+data['new_vcsa']['appliance']['thin_disk_mode'] = bool(cfg_yaml["VC_THIN_PROVISION"])
+data['new_vcsa']['appliance']['deployment_option'] = cfg_yaml["VC_DEPLOYMENT_SIZE"]
+data['new_vcsa']['appliance']['name'] = cfg_yaml["VC_NAME"]
+data['new_vcsa']['network']['mode'] = cfg_yaml["VC_NET_MODE"]
+data['new_vcsa']['network']['ip'] = cfg_yaml["VC_IP"]
+data['new_vcsa']['network']['dns_servers'] = cfg_yaml["VC_DNS_SERVERS"]
+data['new_vcsa']['network']['prefix'] = cfg_yaml["VC_NETMASK"]
+data['new_vcsa']['network']['gateway'] = cfg_yaml["VC_GATEWAY"]
+data['new_vcsa']['network']['system_name'] = cfg_yaml["VC_SYSTEM_NAME"]
+data['new_vcsa']['os']['password'] = cfg_yaml["VC_ROOT_PWD"]
+data['new_vcsa']['os']['ntp_servers'] = cfg_yaml["VC_NTP_SERVER"]
+data['new_vcsa']['os']['ssh_enable'] = bool(cfg_yaml["VC_SSH_ENABLED"])
+data['new_vcsa']['sso']['password'] = cfg_yaml["VC_SSO_PWD"]
+data['new_vcsa']['sso']['domain_name'] = cfg_yaml["VC_SSO_DOMAIN"]
+data['ceip']['settings']['ceip_enabled'] =  bool(cfg_yaml["CEIP_ENABLED"])
 
 print(data)
 
-with open ('vc.json', 'w') as fp:
+with open (tempfile, 'w') as fp:
     json.dump(data, fp, indent=4)
 
 # Deploy 
@@ -52,14 +61,19 @@ if host_os == 'Darwin':
     deployvcsa = f'"{VC_ISO_MOUNT}/VMware VCSA/vcsa-cli-installer/mac/vcsa-deploy" \
     install --verbose --accept-eula --acknowledge-ceip \
     --no-ssl-certificate-verification --skip-ovftool-verification \
-    {currentDirectory}/vc.json'
+    {tempfile}'
 elif host_os == 'Linux':
     deployvcsa = f'{VC_ISO_MOUNT}/vcsa-cli-installer/lin64/vcsa-deploy \
     install --verbose --accept-eula --acknowledge-ceip \
     --no-ssl-certificate-verification --skip-ovftool-verification \
-    {currentDirectory}/vc.json'
+    {tempfile}'
 
-os.system(deployvcsa)
+try:
+    os.system(deployvcsa)
+    os.remove(tempfile)
+
+except:
+    os.remove(tempfile)
 
 # Unmount
 os.system("umount /tmp/tmp_iso")

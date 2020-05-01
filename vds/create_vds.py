@@ -1,11 +1,9 @@
-'''
-Copyright 2014-2015 Reubenur Rahman
-All Rights Reserved
-@author: reuben.13@gmail.com
-'''
+"""
+Adapted from: https://raw.githubusercontent.com/reubenur-rahman/vmware-pyvmomi-examples/master/create_dvs_and_dvport_group.py
+From vmware/pyvmomi-community-samples
+"""
 
 import atexit
-import sys
 import time
 import os
 
