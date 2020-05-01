@@ -87,7 +87,7 @@ create_mgmtPG()
 
 ## Create COMP DVS PortGroups
 create_compPGs_list = []
-def compPG():
+def create_compPG():
     for pg in compPGs:
         mgmtpg = pulumi_vsphere.DistributedPortGroup(resource_name=pg.get('name'), name=pg.get('name'), 
         distributed_virtual_switch_uuid=dvs_list[1].id, vlan_id=pg.get('vlan'), vlan_ranges=pg.get('vlan_range'))
