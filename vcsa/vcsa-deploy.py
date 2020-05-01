@@ -2,7 +2,6 @@ import json
 import os
 import platform
 import yaml
-from vcsavars import *
 
 currentDirectory = os.getcwd()
 
@@ -10,6 +9,12 @@ host_os = platform.system()
 tempfile = '/tmp/vcsa_cfg.json'
 homedir = os.getenv('HOME')
 print("HOMEDIR is ", homedir)
+
+yaml_file = open(homedir+"/vcsa-params.yaml")
+cfg_yaml = yaml.load(yaml_file, Loader=yaml.Loader)
+print(cfg_yaml["ESXI_HOSTS"])
+VC_ISO_MOUNT = cfg_yaml["VC_ISO_MOUNT"]
+VC_ISO_PATH = cfg_yaml["VC_ISO_PATH"]
 
 if host_os == 'Darwin':
     os.system(f"mkdir {VC_ISO_MOUNT}")
@@ -26,9 +31,6 @@ else:
 
 
 
-yaml_file = open(homedir+"/vcsa-params.yaml")
-cfg_yaml = yaml.load(yaml_file, Loader=yaml.FullLoader)
-print(cfg_yaml["ESXI_HOSTS"])
 
 data['new_vcsa']['esxi']['hostname'] = cfg_yaml["ESXI_HOSTS"][0]
 data['new_vcsa']['esxi']['username'] = cfg_yaml["ESXI_USR"]
