@@ -20,6 +20,7 @@ vm_Folders = ['pl-packer-templates', 'pl-tkg-vms', 'pl-terraform-vms']
 mgmt_Hosts = ['vlab-esx-100.vballin.com','vlab-esx-110.vballin.com','vlab-esx-120.vballin.com']
 tkg_Hosts = ['lab-esx-80.vballin.com','vlab-esx-90.vballin.com']
 workload_Hosts = ['vlab-esx-130.vballin.com','vlab-esx-140.vballin.com','vlab-esx-150.vballin.com']
+all_Hosts = mgmt_Hosts + tkg_Hosts + workload_Hosts
 
 # Network parameters
 ## Distributed Virtual Switches
