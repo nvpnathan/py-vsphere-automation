@@ -11,10 +11,19 @@
 - vSphere 7.0 with a physical ESXi 7.0 Host
 
 
-## ---FUTURE--- Creating the YAML Configuration file.
+## Automated Install with esx-deploy.py.
+Updated the YAML file 
 
 ``` yaml
+ESXI_HOSTS:
+  - '10.172.209.63'
+  - '10.172.209.64'
 
+### Section for esx-deploy.py
+ESX_VM_NAME_PREFIX: "py-ovadeploy-"
+ESX_VM_HOSTNAME_PREFIX: "py-esx7-"
+ESX_TARGET_VCSA_SSO_USER: "administrator@vsphere.local"
+ESX_TARGET_VCSA_SSO_PASS: "Some Password"
 ```
 
 ## Manual Install with ovftool Steps
