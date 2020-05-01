@@ -12,6 +12,7 @@ import os
 from pyVmomi import vim, vmodl
 from pyvim import connect
 from pyvim.connect import Disconnect
+import pyvim
 
 inputs = {'vcenter_ip': os.environ.get('VCENTER_IP'),
           'vcenter_password': os.environ.get('VCENTER_PW'),
@@ -35,10 +36,23 @@ def create_cluster(**kwargs):
     if datacenter is None:
         raise ValueError("Missing value for datacenter.")
     if cluster_spec is None:
+        # Create Cluster Spec
         cluster_spec = vim.cluster.ConfigSpecEx()
+        # Create HA SubSpec and add to ClusterSpec https://pubs.vmware.com/vi-sdk/visdk250/ReferenceGuide/vim.cluster.DasConfigInfo.html
+        ha_spec = vim.cluster.DasConfigInfo()
+        ha_spec.enabled = True
+        ha_spec.hostMonitoring = vim.cluster.DasConfigInfo.ServiceState.enabled
+        ha_spec.failoverLevel = 1
+        cluster_spec.dasConfig = ha_spec
+        # Create DRS subspec and add to cluster_spec https://pubs.vmware.com/vi-sdk/visdk250/ReferenceGuide/vim.cluster.DrsConfigInfo.html
+        drs_spec = vim.cluster.DrsConfigInfo()
+        drs_spec.enabled = True
+        cluster_spec.drsConfig = drs_spec
+
 
     host_folder = datacenter.hostFolder
     cluster = host_folder.CreateClusterEx(name=cluster_name, spec=cluster_spec)
+
     return cluster
 
 def create_datacenter(dcname=None, service_instance=None, folder=None):
@@ -88,16 +102,20 @@ def main():
         si = None
         try:
             print("Trying to connect to VCENTER SERVER . . .")
-            #si_old = connect.Connect(inputs['vcenter_ip'], 443, inputs['vcenter_user'], inputs['vcenter_password'])
             si = connect.SmartConnectNoSSL('https', inputs['vcenter_ip'], 443, inputs['vcenter_user'], inputs['vcenter_password'])
-            #test = connect.SmartConnectNoSSL()
+
         except IOError as e:
             pass
             atexit.register(Disconnect, si)
 
         print("Connected to VCENTER SERVER !")
+
+        # CREATE THE DATACENTER
         dc = create_datacenter(dcname=inputs['datacenter'], service_instance=si)
+
+        # CREATE THE CLUSTER
         create_cluster(datacenter=dc, name=inputs['cluster'])
+
 
     except vmodl.MethodFault as e:
         print("Caught vmodl fault: %s" % e.msg)
