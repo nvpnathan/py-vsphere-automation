@@ -12,7 +12,7 @@
 
 
 ## Automated Install with esx-deploy.py.
-Updated the YAML file 
+To deploy the nested ESXi 7.0 hosts, the deployment script needs following information which should be set in ~/vcsa-params.yaml in following format: NOTE: The script will install as many ESXi hosts as you have listed under ESXI_HOSTS by IP Address.
 
 ``` yaml
 ESXI_HOSTS:
@@ -25,6 +25,14 @@ ESX_VM_HOSTNAME_PREFIX: "py-esx7-"
 ESX_TARGET_VCSA_SSO_USER: "administrator@vsphere.local"
 ESX_TARGET_VCSA_SSO_PASS: "Some Password"
 ```
+
+Run the esx-deploy.py script
+```shell
+pwd
+/Users/<user>/gitHub/py-vsphere-automation
+python3 ./esx/esx-deploy.py
+```
+
 
 ## Manual Install with ovftool Steps
 
