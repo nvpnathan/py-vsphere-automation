@@ -20,11 +20,13 @@ inputs = {'vcenter_ip': os.environ.get('VCENTER_IP'),
           'datacenter': 'Datacenter',
           'cluster': 'Nested-PKS',
           'dvs_name': 'PythonDVS1',
-          'dv_port_name': 'TestDVPortGroup1'
+          'dvs_pg1_name': 'management-vm',
+          'dvs_pg1_vlan': 100,
+          'dvs_pg2_name': 'tep-edge',
+          'dvs_pg2_vlan': 102,
+          'dvs_pg3_name': 'ext-uplink-edge',
+          'dvs_pg3_vlan': 103,
           }
-
-
-
 
 def get_obj(content, vimtype, name):
     """
@@ -64,30 +66,6 @@ def wait_for_task(task, actionName='job', hideResult=False):
 
     return task.info.result
 
-
-def add_dvPort_group(si, dv_switch):
-    dv_pg_spec = vim.dvs.DistributedVirtualPortgroup.ConfigSpec()
-    dv_pg_spec.name = inputs['dv_port_name']
-    dv_pg_spec.numPorts = 32
-    dv_pg_spec.type = vim.dvs.DistributedVirtualPortgroup.PortgroupType.earlyBinding
-
-    dv_pg_spec.defaultPortConfig = vim.dvs.VmwareDistributedVirtualSwitch.VmwarePortConfigPolicy()
-    dv_pg_spec.defaultPortConfig.securityPolicy = vim.dvs.VmwareDistributedVirtualSwitch.SecurityPolicy()
-
-    dv_pg_spec.defaultPortConfig.vlan = vim.dvs.VmwareDistributedVirtualSwitch.TrunkVlanSpec()
-    dv_pg_spec.defaultPortConfig.vlan.vlanId = [vim.NumericRange(start=1, end=4094)]
-    dv_pg_spec.defaultPortConfig.securityPolicy.allowPromiscuous = vim.BoolPolicy(value=True)
-    dv_pg_spec.defaultPortConfig.securityPolicy.forgedTransmits = vim.BoolPolicy(value=True)
-
-    dv_pg_spec.defaultPortConfig.vlan.inherited = False
-    dv_pg_spec.defaultPortConfig.securityPolicy.macChanges = vim.BoolPolicy(value=False)
-    dv_pg_spec.defaultPortConfig.securityPolicy.inherited = False
-
-    task = dv_switch.AddDVPortgroup_Task([dv_pg_spec])
-    wait_for_task(task, si)
-    print("- Successfully created DV Port Group ", inputs['dv_port_name'])
-
-
 def create_dvSwitch(si, content, network_folder, cluster):
     pnic_specs = []
     dvs_host_configs = []
@@ -122,6 +100,32 @@ def create_dvSwitch(si, content, network_folder, cluster):
     print("- Successfully created DVS ", inputs['dvs_name'])
     return get_obj(content, [vim.DistributedVirtualSwitch], inputs['dvs_name'])
 
+def add_dvPort_group(si, dv_switch, dv_pg_name, dv_pg_vlan):
+    dv_pg_spec = vim.dvs.DistributedVirtualPortgroup.ConfigSpec()
+    dv_pg_spec.name = dv_pg_name
+    dv_pg_spec.numPorts = 32
+    dv_pg_spec.type = vim.dvs.DistributedVirtualPortgroup.PortgroupType.earlyBinding
+
+    dv_pg_spec.defaultPortConfig = vim.dvs.VmwareDistributedVirtualSwitch.VmwarePortConfigPolicy()
+    dv_pg_spec.defaultPortConfig.securityPolicy = vim.dvs.VmwareDistributedVirtualSwitch.SecurityPolicy()
+
+    # BELOW USED TO set to a SPECIFIC ID
+    dv_pg_spec.defaultPortConfig.vlan = vim.dvs.VmwareDistributedVirtualSwitch.VlanIdSpec()
+    dv_pg_spec.defaultPortConfig.vlan.vlanId = dv_pg_vlan
+
+    # 2 LINES BELOW USED FOR TRUNK PORTS to CARRY ALL
+    # dv_pg_spec.defaultPortConfig.vlan = vim.dvs.VmwareDistributedVirtualSwitch.TrunkVlanSpec()
+    # dv_pg_spec.defaultPortConfig.vlan.vlanId = [vim.NumericRange(start=1, end=4094)]
+    dv_pg_spec.defaultPortConfig.securityPolicy.allowPromiscuous = vim.BoolPolicy(value=True)
+    dv_pg_spec.defaultPortConfig.securityPolicy.forgedTransmits = vim.BoolPolicy(value=True)
+
+    dv_pg_spec.defaultPortConfig.vlan.inherited = False
+    dv_pg_spec.defaultPortConfig.securityPolicy.macChanges = vim.BoolPolicy(value=False)
+    dv_pg_spec.defaultPortConfig.securityPolicy.inherited = False
+
+    task = dv_switch.AddDVPortgroup_Task([dv_pg_spec])
+    wait_for_task(task, si)
+    print("- Successfully created DV Port Group ", dv_pg_name)
 
 def main():
     # TEMP DEBUG
@@ -135,9 +139,7 @@ def main():
         si = None
         try:
             print("Trying to connect to VCENTER SERVER . . .")
-            #si_old = connect.Connect(inputs['vcenter_ip'], 443, inputs['vcenter_user'], inputs['vcenter_password'])
             si = connect.SmartConnectNoSSL('https', inputs['vcenter_ip'], 443, inputs['vcenter_user'], inputs['vcenter_password'])
-            #test = connect.SmartConnectNoSSL()
         except IOError as e:
             pass
             atexit.register(Disconnect, si)
@@ -152,8 +154,13 @@ def main():
 
         # Create DV Switch
         dv_switch = create_dvSwitch(si, content, network_folder, cluster)
-        # Add port group to this switch
-        add_dvPort_group(si, dv_switch)
+
+        # Add port group to this switch for management traffic
+        add_dvPort_group(si, dv_switch, inputs['dvs_pg1_name'], inputs['dvs_pg1_vlan'])
+        # Add port group to this switch for management traffic
+        add_dvPort_group(si, dv_switch, inputs['dvs_pg2_name'], inputs['dvs_pg2_vlan'])
+        # Add port group to this switch for management traffic
+        add_dvPort_group(si, dv_switch, inputs['dvs_pg3_name'], inputs['dvs_pg3_vlan'])
 
     except vmodl.MethodFault as e:
         print("Caught vmodl fault: %s" % e.msg)
