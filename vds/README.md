@@ -1,10 +1,12 @@
+### VDS Creation with single uplink and 3 Portgroups with VLAN Tags
+
 ### vSphere Requirements
 
 The VCSA Appliance needs to be deployed already
 
-## Creating the YAML Configuration file.
+## Configure Parameters.
 
-To deploy the VCSA appliance the deployment script needs following environment variables set:
+To create the VDS and Port Groups you need to set the following parameters:
 
 ``` 
 export VCENTER_IP ='192.168.44.86'                                  # IP for VCSA Appliance
@@ -13,9 +15,29 @@ export VCENTER_USER ='administrator@vsphere.local'
 
 ```
 
+## Configure Variables in the Script 
 
-Once you have exported the 3 ENV VARS you can create a new Datacenter and Cluster with DRS & HA enabled with the following command.
+To create the VDS and Port Groups you need to update the inputs in the create_vds.py script:
+
+``` 
+inputs = {'vcenter_ip': os.environ.get('VCENTER_IP'),
+          'vcenter_password': os.environ.get('VCENTER_PW'),
+          'vcenter_user': os.environ.get('VCENTER_USER'),
+          'datacenter': 'Datacenter',
+          'cluster': 'Nested-PKS',
+          'dvs_name': 'PythonDVS1',
+          'dvs_pg1_name': 'management-vm',
+          'dvs_pg1_vlan': 100,
+          'dvs_pg2_name': 'tep-edge',
+          'dvs_pg2_vlan': 102,
+          'dvs_pg3_name': 'ext-uplink-edge',
+          'dvs_pg3_vlan': 103,
+          }
+```
+
+
+Once you have exported the 3 ENV VARS and updated inputs in the script you can run with the following:
 
 ```shell
-create_dc_cluster.py
+create_vds.py
 ```
