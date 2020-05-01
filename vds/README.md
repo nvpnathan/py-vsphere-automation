@@ -1,10 +1,10 @@
-### VDS Creation with single uplink and 3 Portgroups with VLAN Tags
+## VDS Creation with single uplink and 3 Portgroups with VLAN Tags
 
-### vSphere Requirements
+### Requirements
 
 The VCSA Appliance needs to be deployed already
 
-## Configure Parameters.
+### Configure Parameters.
 
 To create the VDS and Port Groups you need to set the following parameters:
 
@@ -15,7 +15,7 @@ export VCENTER_USER ='administrator@vsphere.local'
 
 ```
 
-## Configure Variables in the Script 
+### Configure Variables in the Script 
 
 To create the VDS and Port Groups you need to update the inputs in the create_vds.py script:
 
@@ -35,7 +35,7 @@ inputs = {'vcenter_ip': os.environ.get('VCENTER_IP'),
           }
 ```
 
-
+### Run the VDS creation script.
 Once you have exported the 3 ENV VARS and updated inputs in the script you can run with the following:
 
 ```shell
