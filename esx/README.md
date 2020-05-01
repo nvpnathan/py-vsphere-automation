@@ -31,12 +31,12 @@ For OSX doubleclick the DMG file and accept security warning or override in Syst
 
 Run the ovftool 
 ```shell
-ovftool --acceptAllEulas --datastore="nfs-ubuntu-01" --name="esx7-ipAllocationPolicy-03" \
---net:"VM Network"="VM 1525" --ipAllocationPolicy="fixedAllocatedPolicy" --powerOn \
---prop:"guestinfo.hostname"="ovf-vcsa-hostname"  --prop:"guestinfo.ipaddress"="10.173.13.92" \
---prop:"guestinfo.netmask" --prop:"guestinfo.gateway"="10.173.13.125" --prop:"guestinfo.vlan"="0" \
---prop:"guestinfo.dns"="10.173.13.90" --prop:"guestinfo.domain"="tpmlab.vmware.com" \
---prop:"guestinfo.ntp" --prop:"guestinfo.ssh"=True --prop:"guestinfo.createvmfs"=True ./Nested_ESXi7.0_Appliance_Template_v1.ova vi://vcsa.tpmlab.vmware.com/Datacenter/host/Nested-PKS
+ovftool --acceptAllEulas --datastore="nfs-ubuntu-01" --name="esx7-ovftool-04" --net:"VM Network"="VM 1525" \
+--ipAllocationPolicy="fixedAllocatedPolicy" --powerOn --prop:"guestinfo.hostname"="ovf-vcsa-hostname"  \
+--prop:"guestinfo.ipaddress"="10.173.13.92" --prop:"guestinfo.netmask"="255.255.255.128" \
+--prop:"guestinfo.gateway"="10.173.13.125" --prop:"guestinfo.vlan"="0" --prop:"guestinfo.dns"="10.173.13.90" \
+--prop:"guestinfo.domain"="tpmlab.vmware.com" --prop:"guestinfo.ntp" --prop:"guestinfo.ssh"=True \
+--prop:"guestinfo.createvmfs"=True ./Nested_ESXi7.0_Appliance_Template_v1.ova vi://vcsa.tpmlab.vmware.com/Datacenter/host/Nested-PKS
 
 Opening OVA source: ./Nested_ESXi7.0_Appliance_Template_v1.ova
 The manifest validates
