@@ -17,14 +17,14 @@ vm_Folders = ['pl-packer-templates', 'pl-tkg-vms', 'pl-terraform-vms']
 ## Clusters, Resource Pools and Hosts
 all_hosts = [{'cluster': 'pl-vlab-mgmt', 'clusterObject': '',
               'resourcePools': ['pl-pks-comp','pl-pks-mgmt','pl-terraform-vms','pl-tkg-mgmt'],
-              'hosts': [{'name':'esx1.vballin.com', 'thumbprint': ''},
-                        {'name':'esx2.vballin.com', 'thumbprint': ''}]},
+              'hosts': [{'name':'esx1.vballin.com', 'thumbprint': '', 'hostObject': ''},
+                        {'name':'esx2.vballin.com', 'thumbprint': '', 'hostObject': ''}]},
              {'cluster': 'pl-vlab-tkg', 'clusterObject': '',
               'resourcePools': ['pl-tkg-workload'],
-              'hosts': [{'name':'esx3.vballin.com', 'thumbprint': ''}]},
+              'hosts': [{'name':'esx3.vballin.com', 'thumbprint': '', 'hostObject': ''}]},
              {'cluster': 'pl-vlab-workload', 'clusterObject': '',
               'resourcePools': [],
-              'hosts': [{'name':'esx4.vballin.com', 'thumbprint': ''}]}
+              'hosts': [{'name':'esx4.vballin.com', 'thumbprint': '', 'hostObject': ''}]}
             ]
 
 # Network parameters
@@ -128,7 +128,8 @@ def add_allHosts():
         for n in host:
             hosts = pulumi_vsphere.Host(resource_name=n['name'], hostname=n['name'], cluster=cluster, username='root', password='VMware1!', thumbprint=n['thumbprint'], force=True)
             all_host_list.append(hosts)
-    return 
+        x.update(hostObject = hosts)
+    return all_host_list
 add_allHosts()
 
 ## Create Resource Pools
