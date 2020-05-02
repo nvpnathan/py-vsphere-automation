@@ -1,26 +1,31 @@
 import pulumi
 import pulumi_vsphere
-
+import ssl
+import socket
+import hashlib
 # Code Testing
-#pulumi.runtime.settings._set_test_mode_enabled(True)  
+pulumi.runtime.settings._set_test_mode_enabled(True)  
 
 # Compute parameters
 dc = ['pl-dc']
-clusters = ['pl-vlab-mgmt', 'pl-vlab-tkg', 'pl-vlab-workload']
 cl_settings = {"drs_enabled": True, "drs_automation_level": 'fullyAutomated', "ha_enabled": True, "ha_advanced_options":{'das.IgnoreInsufficientHbDatastore':'True',
         'das.IgnoreRedundantNetWarning':'True'}, "ha_admission_control_policy": 'disabled'}
-
-## Resource Pools
-resourcePools = [['pl-pks-comp','pl-pks-mgmt','pl-terraform-vms','pl-tkg-mgmt'],['pl-tkg-workload'],[]]
 
 ## VM Folders
 vm_Folders = ['pl-packer-templates', 'pl-tkg-vms', 'pl-terraform-vms']
 
-## vSphere Hosts 
-mgmt_Hosts = ['vlab-esx-100.vballin.com','vlab-esx-110.vballin.com','vlab-esx-120.vballin.com']
-tkg_Hosts = ['lab-esx-80.vballin.com','vlab-esx-90.vballin.com']
-workload_Hosts = ['vlab-esx-130.vballin.com','vlab-esx-140.vballin.com','vlab-esx-150.vballin.com']
-all_Hosts = mgmt_Hosts + tkg_Hosts + workload_Hosts
+## Clusters, Resource Pools and Hosts
+all_hosts = [{'cluster': 'pl-vlab-mgmt', 'clusterObject': '',
+              'resourcePools': ['pl-pks-comp','pl-pks-mgmt','pl-terraform-vms','pl-tkg-mgmt'],
+              'hosts': [{'name':'esx1.vballin.com', 'thumbprint': ''},
+                        {'name':'esx2.vballin.com', 'thumbprint': ''}]},
+             {'cluster': 'pl-vlab-tkg', 'clusterObject': '',
+              'resourcePools': ['pl-tkg-workload'],
+              'hosts': [{'name':'esx3.vballin.com', 'thumbprint': ''}]},
+             {'cluster': 'pl-vlab-workload', 'clusterObject': '',
+              'resourcePools': [],
+              'hosts': [{'name':'esx4.vballin.com', 'thumbprint': ''}]}
+            ]
 
 # Network parameters
 ## Distributed Virtual Switches
@@ -55,14 +60,16 @@ create_datacenters()
 ## Create vSphere Cluster(s)
 cluster_list = []
 def create_cluster():
-    for c in clusters:
-        compCluster = pulumi_vsphere.ComputeCluster(resource_name=c, datacenter_id=dc_list[0].moid,name=c,
-            drs_enabled = cl_settings["drs_enabled"],
-            drs_automation_level=cl_settings["drs_automation_level"],
-            ha_enabled = cl_settings["ha_enabled"],
-            ha_advanced_options = cl_settings["ha_advanced_options"],
-            ha_admission_control_policy = 'disabled')
-        cluster_list.append(compCluster)
+    for x in all_hosts:
+        cluster = [x['cluster']]
+        for n in cluster:
+            compCluster = pulumi_vsphere.ComputeCluster(resource_name=n, datacenter_id=dc_list[0].moid,name=n,
+                drs_enabled = cl_settings["drs_enabled"],
+                drs_automation_level=cl_settings["drs_automation_level"],
+                ha_enabled = cl_settings["ha_enabled"],
+                ha_advanced_options = cl_settings["ha_advanced_options"],
+                ha_admission_control_policy = 'disabled')
+            x.update(clusterObject = compCluster)
     return cluster_list
 create_cluster()
 
@@ -96,39 +103,43 @@ def create_compPG():
     return mgmtPGs_list
 create_compPG()
 
-# Get Hosts
-mgmtHosts_list = []
-def get_mgmtHosts():
-    for host in mgmt_Hosts:
-        hosts = pulumi_vsphere.get_host(datacenter_id=dc_list[0].moid, name=host, opts=None)
-        mgmtHosts_list.append(hosts)
-    return mgmtHosts_list
-#get_mgmtHosts()
+## Retrieve ESXi thumbprint to add to vCenter
+def get_esxi_thumbprint():
+    for x in all_hosts:
+        host = x['hosts']
+        for n in host:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(1)
+                wrappedSocket = ssl.wrap_socket(sock)
+                wrappedSocket.connect((n['name'], 443))
+                der_cert_bin = wrappedSocket.getpeercert(True)
+                thumb_sha1 = hashlib.sha1(der_cert_bin).hexdigest()
+                thumb = ':'.join(a+b for a,b in zip(thumb_sha1[::2], thumb_sha1[1::2]))
+                n.update(thumbprint = thumb)
+    return 
+get_esxi_thumbprint()
 
-tkgHosts_list = []
-def get_tkgHosts():
-    for host in tkg_Hosts:
-        hosts = pulumi_vsphere.get_host(datacenter_id=dc_list[0].moid, name=host, opts=None)
-        tkgHosts_list.append(hosts)
-    return tkgHosts_list
-#get_tkgHosts()
+## Add Hosts to to vCenter and Clusters
+all_host_list = []
+def add_allHosts():
+    for x in all_hosts:
+        cluster = x['clusterObject']
+        host = x['hosts']
+        for n in host:
+            hosts = pulumi_vsphere.Host(resource_name=n['name'], hostname=n['name'], cluster=cluster, username='root', password='VMware1!', thumbprint=n['thumbprint'], force=True)
+            all_host_list.append(hosts)
+    return 
+add_allHosts()
 
-workloadHosts_list = []
-def get_workloadHosts():
-    for host in workload_Hosts:
-        hosts = pulumi_vsphere.get_host(datacenter_id=dc_list[0].moid, name=host, opts=None)
-        workloadHosts_list.append(hosts)
-    return workloadHosts_list
-#get_workloadHosts()
-
-## Create vSphere Resource Pools
-clusterRPs = dict(zip(cluster_list, resourcePools))
+## Create Resource Pools
 rp_list = []
 def create_clusterRP():
-    for k, v in clusterRPs.items():
-        for i in v:
-            rps = pulumi_vsphere.ResourcePool(resource_name=i, name=i, parent_resource_pool_id=k.resource_pool_id)
-            rp_list.append(rps)
+    for r in all_hosts:
+        rp = r['resourcePools']
+        clobject = r['clusterObject']
+        for i in rp:
+            rps = pulumi_vsphere.ResourcePool(resource_name=i, name=i, parent_resource_pool_id=clobject.resource_pool_id)
+        rp_list.append(rps)
     return rp_list
 create_clusterRP()
 
