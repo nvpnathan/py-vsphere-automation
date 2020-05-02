@@ -1,21 +1,35 @@
 # Deploying nested ESXi hypervisors as Virtual Machines
 
 
-## Manual Install with ovftool Requirements
+## Requirements
 
-- This repo including the vcsa-deploy.py
-- ESXi 7.0 OVA from William Lams
-- ovftool - version
+- This repo including the esx-deploy.py
+- ESXi 7.0 OVA from William Lam's Blog
+- ovftool installed
+- Target ESXi host must be version 6.7 or higher
 
-### vSphere Requirements
-- vSphere 7.0 with a physical ESXi 7.0 Host
-
-
-## ---FUTURE--- Creating the YAML Configuration file.
+## Automated Install with esx-deploy.py.
+To deploy the nested ESXi 7.0 hosts, the deployment script needs following information which should be set in ~/vcsa-params.yaml in following format: NOTE: The script will install as many ESXi hosts as you have listed under ESXI_HOSTS by IP Address.
 
 ``` yaml
+ESXI_HOSTS:
+  - '10.172.209.63'
+  - '10.172.209.64'
 
+### Section for esx-deploy.py
+ESX_VM_NAME_PREFIX: "py-ovadeploy-"
+ESX_VM_HOSTNAME_PREFIX: "py-esx7-"
+ESX_TARGET_VCSA_SSO_USER: "administrator@vsphere.local"
+ESX_TARGET_VCSA_SSO_PASS: "Some Password"
 ```
+
+Run the esx-deploy.py script
+```shell
+pwd
+/Users/<user>/gitHub/py-vsphere-automation
+python3 ./esx/esx-deploy.py
+```
+
 
 ## Manual Install with ovftool Steps
 
