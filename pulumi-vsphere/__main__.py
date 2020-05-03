@@ -48,6 +48,12 @@ compPGs = [
     {'name':'pl-esxi-mgmt', 'vlan': '0'},
     {'name':'pl-tkg-mgmt', 'vlan': '64'}]
 
+# Storage parameters
+nas_datastores = [{'name':'nfs-01', 'nas_hosts':['192.168.79.10'], 'path':'/NFS-DS-01'},
+                  {'name':'nfs-02', 'nas_hosts':['192.168.79.10'], 'path':'/NFS-DS-02'},
+                  {'name':'nfs-04', 'nas_hosts':['192.168.79.10'], 'path':'/NFS-DS-04'}]
+
+
 ## Create Datacenter(s)
 dc_list = []
 def create_datacenters():
@@ -175,3 +181,13 @@ def create_compPG():
         mgmtPGs_list.append(mgmtpg)
     return mgmtPGs_list
 create_compPG()
+
+## Add Storage
+ds_list = []
+def create_nas_ds():
+    for x in nas_datastores:
+        ds = vsphere.NasDatastore(resource_name=x.get('name'), name=x.get('name'), host_system_ids=hosts_ids,
+        remote_hosts=x.get('nas_hosts'), remote_path=x.get('path'))
+        dc_list.append(ds)
+    return ds_list
+create_nas_ds()
