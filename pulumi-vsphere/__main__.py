@@ -1,5 +1,5 @@
 import pulumi
-import pulumi_vsphere
+import pulumi_vsphere as vsphere
 import ssl
 import socket
 import hashlib
@@ -30,8 +30,8 @@ all_hosts = [{'cluster': 'pl-vlab-mgmt', 'clusterObject': '',
 # Network parameters
 ## Distributed Virtual Switches
 dvs = [
-    {'name':'pl-mgmt','version': '6.5.0'}, 
-    {'name':'pl-tkg'}
+    {'name':'pl-mgmt','version': '6.5.0', 'dvsObject': ''},
+    {'name':'pl-tkg', 'dvsObject': ''}
     ]
 
 ## MGMT DVS Portgroups
@@ -52,7 +52,7 @@ compPGs = [
 dc_list = []
 def create_datacenters():
     for d in dc:
-        datacenter = pulumi_vsphere.Datacenter(resource_name=d, name=d)
+        datacenter = vsphere.Datacenter(resource_name=d, name=d)
         dc_list.append(datacenter)
     return dc_list
 create_datacenters()
@@ -63,7 +63,7 @@ def create_cluster():
     for x in all_hosts:
         cluster = [x['cluster']]
         for n in cluster:
-            compCluster = pulumi_vsphere.ComputeCluster(resource_name=n, datacenter_id=dc_list[0].moid,name=n,
+            compCluster = vsphere.ComputeCluster(resource_name=n, datacenter_id=dc_list[0].moid,name=n,
                 drs_enabled = cl_settings["drs_enabled"],
                 drs_automation_level=cl_settings["drs_automation_level"],
                 ha_enabled = cl_settings["ha_enabled"],
@@ -72,36 +72,6 @@ def create_cluster():
             x.update(clusterObject = compCluster)
     return cluster_list
 create_cluster()
-
-## Create Virtual Distributed Switches
-dvs_list = []
-def create_vds():
-    for sw in dvs:
-        vds = pulumi_vsphere.DistributedVirtualSwitch(resource_name=sw.get('name'), name=sw.get('name'), 
-        datacenter_id=dc_list[0].moid, version=sw.get('version'), max_mtu='1600')
-        dvs_list.append(vds)
-    return dvs_list 
-create_vds()
-
-## Create MGMT DVS PortGroups
-mgmtPGs_list = []
-def create_mgmtPG():
-    for pg in mgmtPGs:
-        mgmtpg = pulumi_vsphere.DistributedPortGroup(resource_name=pg.get('name'), name=pg.get('name'), 
-        distributed_virtual_switch_uuid=dvs_list[0].id, vlan_id=pg.get('vlan'))
-        mgmtPGs_list.append(mgmtpg)
-    return mgmtPGs_list
-create_mgmtPG()
-
-## Create COMP DVS PortGroups
-create_compPGs_list = []
-def create_compPG():
-    for pg in compPGs:
-        mgmtpg = pulumi_vsphere.DistributedPortGroup(resource_name=pg.get('name'), name=pg.get('name'), 
-        distributed_virtual_switch_uuid=dvs_list[1].id, vlan_id=pg.get('vlan'), vlan_ranges=pg.get('vlan_range'))
-        mgmtPGs_list.append(mgmtpg)
-    return mgmtPGs_list
-create_compPG()
 
 ## Retrieve ESXi thumbprint to add to vCenter
 def get_esxi_thumbprint():
@@ -126,9 +96,9 @@ def add_allHosts():
         cluster = x['clusterObject']
         host = x['hosts']
         for n in host:
-            hosts = pulumi_vsphere.Host(resource_name=n['name'], hostname=n['name'], cluster=cluster, username='root', password='VMware1!', thumbprint=n['thumbprint'], force=True)
+            hosts = vsphere.Host(resource_name=n['name'], hostname=n['name'], cluster=cluster, username='root', password='VMware1!', thumbprint=n['thumbprint'], force=True)
             all_host_list.append(hosts)
-        x.update(hostObject = hosts)
+            n.update(hostObject = hosts)
     return all_host_list
 add_allHosts()
 
@@ -139,7 +109,7 @@ def create_clusterRP():
         rp = r['resourcePools']
         clobject = r['clusterObject']
         for i in rp:
-            rps = pulumi_vsphere.ResourcePool(resource_name=i, name=i, parent_resource_pool_id=clobject.resource_pool_id)
+            rps = vsphere.ResourcePool(resource_name=i, name=i, parent_resource_pool_id=clobject.resource_pool_id)
         rp_list.append(rps)
     return rp_list
 create_clusterRP()
@@ -148,7 +118,60 @@ create_clusterRP()
 folder_list = []
 def create_folders():
     for f in vm_Folders:
-        folders = pulumi_vsphere.Folder(resource_name=f, path=f, type='vm', datacenter_id=dc_list[0].moid)
+        folders = vsphere.Folder(resource_name=f, path=f, type='vm', datacenter_id=dc_list[0].moid)
         folder_list.append(folders)
     return folder_list
 create_folders()
+
+## Add Hosts to VDS
+hosts_ids = []
+dvs_list = []
+def create_vds():
+    for h in all_hosts:
+        if h.get('cluster') in ('pl-vlab-tkg', 'pl-vlab-workload'):
+            hosts = h.get('hosts')
+            for x in hosts:
+                hosts_ids.append(x['hostObject'])
+    for sw in dvs:
+        if sw.get('name') in ('pl-tkg'):
+            vds = vsphere.DistributedVirtualSwitch(resource_name=sw.get('name'), name=sw.get('name'), 
+            datacenter_id=dc_list[0].moid, version=sw.get('version'), max_mtu='1600',
+            hosts=[{'host_system_id':hosts_ids[0], 'devices':['vmnic1']},
+                   {'host_system_id':hosts_ids[1], 'devices':['vmnic1']}])
+            dvs_list.append(vds)
+            sw.update(dvsObject = vds)
+    for h in all_hosts:
+        if h.get('cluster') in ('pl-vlab-mgmt'):
+            hosts = h.get('hosts')
+            for x in hosts:
+                hosts_ids.append(x['hostObject'])
+    for sw in dvs:
+        if sw.get('name') in ('pl-mgmt'):
+            vds = vsphere.DistributedVirtualSwitch(resource_name=sw.get('name'), name=sw.get('name'), 
+            datacenter_id=dc_list[0].moid, version=sw.get('version'), max_mtu='1600',
+            hosts=[{'host_system_id':hosts_ids[2], 'devices':['vmnic1']},
+                   {'host_system_id':hosts_ids[3], 'devices':['vmnic1']}])
+            dvs_list.append(vds)
+            sw.update(dvsObject = vds)
+    return dvs_list
+create_vds()
+
+## Create MGMT DVS PortGroups
+mgmtPGs_list = []
+def create_mgmtPG():
+    for pg in mgmtPGs:
+        mgmtpg = vsphere.DistributedPortGroup(resource_name=pg.get('name'), name=pg.get('name'), 
+        distributed_virtual_switch_uuid=dvs_list[0].id, vlan_id=pg.get('vlan'))
+        mgmtPGs_list.append(mgmtpg)
+    return mgmtPGs_list
+create_mgmtPG()
+
+## Create COMP DVS PortGroups
+create_compPGs_list = []
+def create_compPG():
+    for pg in compPGs:
+        mgmtpg = vsphere.DistributedPortGroup(resource_name=pg.get('name'), name=pg.get('name'), 
+        distributed_virtual_switch_uuid=dvs_list[1].id, vlan_id=pg.get('vlan'), vlan_ranges=pg.get('vlan_range'))
+        mgmtPGs_list.append(mgmtpg)
+    return mgmtPGs_list
+create_compPG()
