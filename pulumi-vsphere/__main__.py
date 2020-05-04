@@ -4,12 +4,13 @@ import ssl
 import socket
 import hashlib
 # Code Testing
-pulumi.runtime.settings._set_test_mode_enabled(True)  
+#pulumi.runtime.settings._set_test_mode_enabled(True)  
 
 # Compute parameters
 dc = ['pl-dc']
-cl_settings = {"drs_enabled": True, "drs_automation_level": 'fullyAutomated', "ha_enabled": True, "ha_advanced_options":{'das.IgnoreInsufficientHbDatastore':'True',
-        'das.IgnoreRedundantNetWarning':'True'}, "ha_admission_control_policy": 'disabled'}
+cl_settings = {"drs_enabled": True, "drs_automation_level": 'fullyAutomated', "ha_enabled": True, 
+               "ha_advanced_options":{'das.IgnoreInsufficientHbDatastore':'True',
+               'das.IgnoreRedundantNetWarning':'True'}, "ha_admission_control_policy": 'disabled'}
 
 ## VM Folders
 vm_Folders = ['pl-packer-templates', 'pl-tkg-vms', 'pl-terraform-vms']
@@ -24,15 +25,12 @@ all_hosts = [{'cluster': 'pl-vlab-mgmt', 'clusterObject': '',
               'hosts': [{'name':'esx3.vballin.com', 'thumbprint': '', 'hostObject': ''}]},
              {'cluster': 'pl-vlab-workload', 'clusterObject': '',
               'resourcePools': [],
-              'hosts': [{'name':'esx4.vballin.com', 'thumbprint': '', 'hostObject': ''}]}
-            ]
+              'hosts': [{'name':'esx4.vballin.com', 'thumbprint': '', 'hostObject': ''}]}]
 
 # Network parameters
 ## Distributed Virtual Switches
-dvs = [
-    {'name':'pl-mgmt','version': '6.5.0', 'dvsObject': ''},
-    {'name':'pl-tkg', 'dvsObject': ''}
-    ]
+dvs = [{'name':'pl-mgmt','version': '6.5.0', 'dvsObject': ''},
+       {'name':'pl-tkg', 'dvsObject': ''}]
 
 ## MGMT DVS Portgroups
 mgmtPGs = [
