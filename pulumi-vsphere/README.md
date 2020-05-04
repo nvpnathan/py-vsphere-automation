@@ -33,7 +33,7 @@ That's it! You're ready to start "programming" your infratucture! I'm **slowly**
 The first thing you have to do is "import" the Pulumi Library's.
 ```python
 import pulumi
-import pulumi_vsphere
+import pulumi_vsphere as vsphere
 
 # Code Testing
 #pulumi.runtime.settings._set_test_mode_enabled(True)  
