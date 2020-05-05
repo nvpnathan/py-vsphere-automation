@@ -17,6 +17,8 @@ pulumi config set vsphere:allowUnverifiedSsl true
 pulumi config set vsphere:password VMware1! --secret
 pulumi config set vsphere:user administrator@vsphere.local
 pulumi config set vsphere:vsphere_server vlab-vcsa.vballin.com
+pulumi config set esxiUser root
+pulumi config set --secret esxiPassword VMware1!
 ```
 
 Create a new "stack" and install the "plugin" for vSphere.

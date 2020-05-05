@@ -6,6 +6,9 @@ import hashlib
 # Code Testing
 #pulumi.runtime.settings._set_test_mode_enabled(True)  
 
+# Pull config secrets
+config = pulumi.Config()
+
 # Compute parameters
 dc = ['pl-dc']
 cl_settings = {"drs_enabled": True, "drs_automation_level": 'fullyAutomated', "ha_enabled": True, 
@@ -100,7 +103,7 @@ def add_allHosts():
         cluster = x['clusterObject']
         host = x['hosts']
         for n in host:
-            hosts = vsphere.Host(resource_name=n['name'], hostname=n['name'], cluster=cluster, username='root', password='VMware1!', thumbprint=n['thumbprint'], force=True)
+            hosts = vsphere.Host(resource_name=n['name'], hostname=n['name'], cluster=cluster, username=config.require('esxiUser'), password=config.require_secret('esxiPassword'), thumbprint=n['thumbprint'], force=True)
             all_host_list.append(hosts)
             n.update(hostObject = hosts)
     return all_host_list
