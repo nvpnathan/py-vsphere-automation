@@ -1,9 +1,12 @@
 ## py-vsphere-automation
 
-#### Eventually will be an end to end deployment tool for vSphere 7 with Kubernetes environment
+End to end rapid deployment tool for vSphere 7 with Kubernetes for demo, poc, or workshop purposes. Will deploy and configure a nested multi ESXi, VCSA, and WCP environment with python. 
 
-## Python Automation components
-Can be used and run individually
+### Instructions to deploy the environment.
+Coming Soon . . . 
+
+## Python Automation individual components
+The individual steps can be used and run individually for other use cases. Follow links below to just run a specific step.
 1. [Nested ESXi 7 OVA deployment](esx/README.md)
 2. [VCSA Appliance Deployment](vcsa/README.md)
 3. [Datacenter & Cluster Creation & Adding Hosts](datacenter/README.md)
