@@ -98,7 +98,7 @@ def create_datacenter(dcname=None, service_instance=None, folder=None):
         dc_moref = folder.CreateDatacenter(name=dcname)
         return dc_moref
 
-def add_hosts(dc,cluster,esx_hosts,esx_user,esx_pwd):
+def add_hosts_to_vc(dc,cluster,esx_hosts,esx_user,esx_pwd):
     host_objects = []
     folder = dc.hostFolder
     for ip in esx_hosts:
@@ -118,6 +118,20 @@ def add_hosts(dc,cluster,esx_hosts,esx_user,esx_pwd):
         host_objects.append(host_mo)
 
     return host_objects
+
+
+def move_hosts_to_cluster(cluster_mo, host_objects):
+    for host_mo in host_objects:
+        task = cluster_mo.MoveInto([host_mo])
+        WaitForTask(task)
+        print("Host '{}' ({}) moved into Cluster {} ({})".
+              format(host_mo, host_mo.name, cluster_mo, cluster_mo.name))
+
+        task = host_mo.ExitMaintenanceMode(30) # 30 sec timeout
+        WaitForTask(task)
+        print("Host '{}' ({}) out of maintenance mode".format(host_mo, host_mo.name))
+
+
 
 def main():
 
@@ -150,9 +164,12 @@ def main():
 
         # ADD THE HOSTS to vCENTER
         print("Adding Hosts !")
-        host_objects = add_hosts(dc, cluster, inputs['esx_hosts'], inputs['esx_user'], inputs['esx_pwd'])
+        host_objects = add_hosts_to_vc(dc, cluster, inputs['esx_hosts'], inputs['esx_user'], inputs['esx_pwd'])
         for i in host_objects:
             print ("ESX ADDED NAME = ", i.name)
+
+        move_hosts_to_cluster (cluster,host_objects)
+
 
     except vmodl.MethodFault as e:
         print("Caught vmodl fault: %s" % e.msg)
