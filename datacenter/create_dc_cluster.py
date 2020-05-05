@@ -7,18 +7,27 @@ http://opensource.org/licenses/Apache-2.0
 """
 
 import atexit
+import yaml
 import os
 
 from pyVmomi import vim, vmodl
 from pyvim import connect
+from pyvim.task import WaitForTask
 from pyvim.connect import Disconnect
-import pyvim
 
-inputs = {'vcenter_ip': os.environ.get('VCENTER_IP'),
-          'vcenter_password': os.environ.get('VCENTER_PW'),
-          'vcenter_user': os.environ.get('VCENTER_USER'),
-          'datacenter': 'python-tmp-dc',
-          'cluster': 'python-tmp-cluster'
+homedir = os.getenv('HOME')
+yaml_file = open(homedir+"/vcsa-params.yaml")
+config = yaml.load(yaml_file, Loader=yaml.Loader)
+
+
+inputs = {'vcenter_ip': config['VC_IP'],
+          'vcenter_password': config['VC_SSO_PWD'],
+          'vcenter_user': 'administrator@vsphere.local',
+          'datacenter': config['VC_DATACENTER'],
+          'cluster': config['VC_CLUSTER'],
+          'esx_hosts': config['ESX_IPS'],
+          'esx_user': config['VC_ESXI_USR'],
+           'esx_pwd': config['VC_ESXI_PWD']
           }
 
 def create_cluster(**kwargs):
@@ -89,6 +98,27 @@ def create_datacenter(dcname=None, service_instance=None, folder=None):
         dc_moref = folder.CreateDatacenter(name=dcname)
         return dc_moref
 
+def add_hosts(dc,cluster,esx_hosts,esx_user,esx_pwd):
+    host_objects = []
+    folder = dc.hostFolder
+    for ip in esx_hosts:
+        connect_spec = vim.host.ConnectSpec(hostName=ip,
+                                        userName=esx_user,
+                                        password=esx_pwd,
+                                        force=False)
+        print("Adding Host ({}) to vCenter".format(ip))
+        task = folder.AddStandaloneHost(connect_spec,
+                                           vim.ComputeResource.ConfigSpec(),
+                                           True)
+        # Get host from task result
+        WaitForTask(task)
+        host_mo = task.info.result.host[0]
+        #print("Created Host '{}' ({})".format(mo._moId, ip))
+        print("Added Host '{}' ({} to vCenter)".format(host_mo._moId, host_mo.name))
+        host_objects.append(host_mo)
+
+    return host_objects
+
 def main():
 
     # TEMP DEBUG
@@ -111,11 +141,18 @@ def main():
         print("Connected to VCENTER SERVER !")
 
         # CREATE THE DATACENTER
+        print("Creating Datacenter !")
         dc = create_datacenter(dcname=inputs['datacenter'], service_instance=si)
 
         # CREATE THE CLUSTER
-        create_cluster(datacenter=dc, name=inputs['cluster'])
+        print("Creating Cluster !")
+        cluster = create_cluster(datacenter=dc, name=inputs['cluster'])
 
+        # ADD THE HOSTS to vCENTER
+        print("Adding Hosts !")
+        host_objects = add_hosts(dc, cluster, inputs['esx_hosts'], inputs['esx_user'], inputs['esx_pwd'])
+        for i in host_objects:
+            print ("ESX ADDED NAME = ", i.name)
 
     except vmodl.MethodFault as e:
         print("Caught vmodl fault: %s" % e.msg)

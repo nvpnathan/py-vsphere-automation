@@ -12,7 +12,7 @@ print("HOMEDIR is ", homedir)
 
 yaml_file = open(homedir+"/vcsa-params.yaml")
 cfg_yaml = yaml.load(yaml_file, Loader=yaml.Loader)
-print(cfg_yaml["ESXI_HOSTS"])
+
 VC_ISO_MOUNT = cfg_yaml["VC_ISO_MOUNT"]
 VC_ISO_PATH = cfg_yaml["VC_ISO_PATH"]
 
@@ -32,10 +32,10 @@ else:
 
 
 
-data['new_vcsa']['esxi']['hostname'] = cfg_yaml["ESXI_HOSTS"][0]
-data['new_vcsa']['esxi']['username'] = cfg_yaml["ESXI_USR"]
-data['new_vcsa']['esxi']['password'] = cfg_yaml["ESXI_PWD"]
-data['new_vcsa']['esxi']['datastore'] = cfg_yaml["ESXI_DATASTORE"]
+data['new_vcsa']['esxi']['hostname'] = cfg_yaml["VC_ESX_HOST"]
+data['new_vcsa']['esxi']['username'] = cfg_yaml["VC_ESXI_USR"]
+data['new_vcsa']['esxi']['password'] = cfg_yaml["VC_ESXI_PWD"]
+data['new_vcsa']['esxi']['datastore'] = cfg_yaml["VC_ESXI_DATASTORE"]
 data['new_vcsa']['esxi']['deployment_network'] = cfg_yaml["VC_PORTGROUP"]
 data['new_vcsa']['appliance']['thin_disk_mode'] = bool(cfg_yaml["VC_THIN_PROVISION"])
 data['new_vcsa']['appliance']['deployment_option'] = cfg_yaml["VC_DEPLOYMENT_SIZE"]
@@ -47,7 +47,7 @@ data['new_vcsa']['network']['prefix'] = cfg_yaml["VC_NETMASK"]
 data['new_vcsa']['network']['gateway'] = cfg_yaml["VC_GATEWAY"]
 data['new_vcsa']['network']['system_name'] = cfg_yaml["VC_SYSTEM_NAME"]
 data['new_vcsa']['os']['password'] = cfg_yaml["VC_ROOT_PWD"]
-data['new_vcsa']['os']['ntp_servers'] = cfg_yaml["VC_NTP_SERVER"]
+data['new_vcsa']['os']['ntp_servers'] = cfg_yaml["NTP_SERVER"]
 data['new_vcsa']['os']['ssh_enable'] = bool(cfg_yaml["VC_SSH_ENABLED"])
 data['new_vcsa']['sso']['password'] = cfg_yaml["VC_SSO_PWD"]
 data['new_vcsa']['sso']['domain_name'] = cfg_yaml["VC_SSO_DOMAIN"]
@@ -72,7 +72,7 @@ elif host_os == 'Linux':
 
 try:
     os.system(deployvcsa)
-    os.remove(tempfile)
+    # os.remove(tempfile)
 
 except:
     os.remove(tempfile)

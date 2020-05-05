@@ -3,8 +3,8 @@
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
-      <env name="VCENTER_USER" value="administrator@vsphere.local" />
       <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="VCENTER_USER" value="administrator@vsphere.local" />
       <env name="VCENTER_IP" value="vcsa.tpmlab.vmware.com" />
       <env name="VCENTER_PW" value="VMware1!" />
     </envs>

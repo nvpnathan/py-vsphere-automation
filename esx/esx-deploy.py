@@ -12,19 +12,10 @@ print("HOMEDIR is ", homedir)
 
 yaml_file = open(homedir+"/vcsa-params.yaml")
 cfg_yaml = yaml.load(yaml_file, Loader=yaml.Loader)
-print(cfg_yaml["ESXI_HOSTS"])
-
-esx_ips = cfg_yaml["ESXI_HOSTS"]
-
-
-'''
-# Deploy 
-if host_os == 'Darwin':
-    deployvcsa = f'"{VC_ISO_MOUNT}/VMware VCSA/vcsa-cli-installer/mac/vcsa-deploy" \
-    install --verbose --accept-eula --acknowledge-ceip \
-    --no-ssl-certificate-verification --skip-ovftool-verification \
-    {tempfile}'
-'''
+print(cfg_yaml["ESX_IPS"])
+esx_ips = cfg_yaml["ESX_IPS"]
+esx_network = cfg_yaml["VC_PORTGROUP"]
+dns = cfg_yaml["VC_DNS_SERVERS"][0]
 
 
 for index, ip in enumerate(esx_ips, start=1):
@@ -35,16 +26,17 @@ for index, ip in enumerate(esx_ips, start=1):
     print("VMName ", vmname)
     print("IP ", ip)
 
-    deployesx = f'"ovftool" --acceptAllEulas --datastore="nfs-ubuntu-01" --name={vmname} --net:"VM Network"="VM 1525" \
-                --ipAllocationPolicy="fixedAllocatedPolicy" --powerOn --prop:"guestinfo.hostname"={hostname}  \
-                --prop:"guestinfo.ipaddress"={ip} --prop:"guestinfo.netmask"="255.255.255.128" \
-                --prop:"guestinfo.gateway"="10.173.13.125" --prop:"guestinfo.vlan"="0" --prop:"guestinfo.dns"="10.173.13.90" \
-                --prop:"guestinfo.domain"="tpmlab.vmware.com" --prop:"guestinfo.ntp" --prop:"guestinfo.ssh"=True \
-                --prop:"guestinfo.createvmfs"=True {homedir}/Downloads/Nested_ESXi7.0_Appliance_Template_v1.ova \
-                vi://{cfg_yaml["ESX_TARGET_VCSA_SSO_USER"]}:{cfg_yaml["ESX_TARGET_VCSA_SSO_PASS"]}@vcsa.tpmlab.vmware.com/Datacenter/host/Nested-PKS'
+    deployesx = f'"ovftool"  --acceptAllEulas --datastore="nfs-ubuntu-01" --name={vmname} --net:"VM Network"="{cfg_yaml["VC_PORTGROUP"]}" \
+    --ipAllocationPolicy="fixedAllocatedPolicy" --powerOn --prop:"guestinfo.hostname"={hostname} \
+    --prop:"guestinfo.ipaddress"={ip} --prop:"guestinfo.netmask"={cfg_yaml["ESX_NETMASK"]} \
+    --prop:"guestinfo.gateway"={cfg_yaml["ESX_GATEWAY"]} --prop:"guestinfo.vlan"={cfg_yaml["VLAN"]} --prop:"guestinfo.dns"={dns} \
+    --prop:"guestinfo.domain"={cfg_yaml["DOMAIN"]} --prop:"guestinfo.ntp"={cfg_yaml["NTP_SERVER"]} --prop:"guestinfo.ssh"=True \
+    --prop:"guestinfo.createvmfs"=True {cfg_yaml["ESX_ISO_PATH"]} \
+    vi://{cfg_yaml["ESX_TARGET_VCSA_SSO_USER"]}:{cfg_yaml["ESX_TARGET_VCSA_SSO_PASS"]}@vcsa.tpmlab.vmware.com/?ip={cfg_yaml["VC_ESX_HOST"]}'
 
     try:
 
+        print(deployesx, "\n")
         os.system(deployesx)
         print("Finished ESXi host #", index)
 
