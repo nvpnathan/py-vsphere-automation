@@ -6,7 +6,7 @@
 - This repo including the esx-deploy.py
 - ESXi 7.0 OVA from William Lam's Blog
 - ovftool installed
-- Target ESXi host must be version 6.7 or higher
+- Target(parent) physical ESXi host must be version 6.7 or higher
 
 ## Automated Install with esx-deploy.py.
 To deploy the nested ESXi 7.0 hosts, the deployment script needs following information which should be set in ~/vcsa-params.yaml in following format: NOTE: The script will install as many ESXi hosts as you have listed under ESXI_HOSTS by IP Address.
