@@ -1,0 +1,3 @@
+[submodule "nsx-install-wrapper"]
+	path = nsx-install-wrapper
+	url = https://github.com/madhukark/nsx-install-wrapper.git
