@@ -2,6 +2,7 @@
 
 - You need the NSX-T 3.0 Datacenter Unified Appliance OVA downloaded
 - You need ansible installed
+- You need ovftool installed locally
 - Optional:  You need a product key for NSX-T 3.0
 
 
