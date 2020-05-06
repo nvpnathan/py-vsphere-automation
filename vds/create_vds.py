@@ -5,25 +5,30 @@ From vmware/pyvmomi-community-samples
 
 import atexit
 import time
+import yaml
 import os
 
 from pyVmomi import vim, vmodl
 from pyvim import connect
 from pyvim.connect import Disconnect
 
+homedir = os.getenv('HOME')
+yaml_file = open(homedir+"/vcsa-params.yaml")
+config = yaml.load(yaml_file, Loader=yaml.Loader)
 
-inputs = {'vcenter_ip': os.environ.get('VCENTER_IP'),
-          'vcenter_password': os.environ.get('VCENTER_PW'),
-          'vcenter_user': os.environ.get('VCENTER_USER'),
-          'datacenter': 'Datacenter',
-          'cluster': 'Nested-PKS',
-          'dvs_name': 'PythonDVS1',
-          'dvs_pg1_name': 'management-vm',
-          'dvs_pg1_vlan': 100,
-          'dvs_pg2_name': 'tep-edge',
-          'dvs_pg2_vlan': 102,
-          'dvs_pg3_name': 'ext-uplink-edge',
-          'dvs_pg3_vlan': 103,
+inputs = {'vcenter_ip': config['VC_IP'],
+          'vcenter_password': config['VC_SSO_PWD'],
+          'vcenter_user': 'administrator@vsphere.local',
+          'datacenter': config['VC_DATACENTER'],
+          'cluster': config['VC_CLUSTER'],
+          'dvs_name': config['VDS_NAME'],
+          'dvs_host_uplink': config['VDS_UPLINK'],
+          'dvs_pg1_name': config['VDS_PG1_NAME'],
+          'dvs_pg1_vlan': config['VDS_PG1_VLAN'],
+          'dvs_pg2_name': config['VDS_PG2_NAME'],
+          'dvs_pg2_vlan': config['VDS_PG2_VLAN'],
+          'dvs_pg3_name': config['VDS_PG3_NAME'],
+          'dvs_pg3_vlan': config['VDS_PG3_VLAN'],
           }
 
 def get_obj(content, vimtype, name):
@@ -38,7 +43,6 @@ def get_obj(content, vimtype, name):
             break
     return obj
 
-
 def wait_for_task(task, actionName='job', hideResult=False):
     """
     Waits and provides updates on a vSphere task
@@ -50,21 +54,19 @@ def wait_for_task(task, actionName='job', hideResult=False):
     if task.info.state == vim.TaskInfo.State.success:
         if task.info.result is not None and not hideResult:
             out = '%s completed successfully, result: %s' % (actionName, task.info.result)
-            print
-            out
+            print(out)
         else:
             out = '%s completed successfully.' % actionName
-            print
-            out
+            print(out)
     else:
         out = '%s did not complete successfully: %s' % (actionName, task.info.error)
         raise task.info.error
-        print
-        out
+        print(out)
 
     return task.info.result
 
 def create_dvSwitch(si, content, network_folder, cluster):
+
     pnic_specs = []
     dvs_host_configs = []
     uplink_port_names = []
@@ -73,14 +75,18 @@ def create_dvSwitch(si, content, network_folder, cluster):
     dvs_config_spec.name = inputs['dvs_name']
     dvs_config_spec.uplinkPortPolicy = vim.DistributedVirtualSwitch.NameArrayUplinkPortPolicy()
     hosts = cluster.host
+
+    for host in cluster.host:
+        print(host.name)
+
     for x in range(len(hosts)):
         uplink_port_names.append("dvUplink%d" % x)
-
     for host in hosts:
+        print("Working on host", host.name)
         dvs_config_spec.uplinkPortPolicy.uplinkPortName = uplink_port_names
         dvs_config_spec.maxPorts = 2000
         pnic_spec = vim.dvs.HostMember.PnicSpec()
-        pnic_spec.pnicDevice = 'vmnic4'
+        pnic_spec.pnicDevice = inputs['dvs_host_uplink']
         pnic_specs.append(pnic_spec)
         dvs_host_config = vim.dvs.HostMember.ConfigSpec()
         dvs_host_config.operation = vim.ConfigSpecOperation.add
@@ -99,6 +105,7 @@ def create_dvSwitch(si, content, network_folder, cluster):
     return get_obj(content, [vim.DistributedVirtualSwitch], inputs['dvs_name'])
 
 def add_dvPort_group(si, dv_switch, dv_pg_name, dv_pg_vlan):
+    print("Creating DV Port Group")
     dv_pg_spec = vim.dvs.DistributedVirtualPortgroup.ConfigSpec()
     dv_pg_spec.name = dv_pg_name
     dv_pg_spec.numPorts = 32
@@ -147,8 +154,8 @@ def main():
         content = si.RetrieveContent()
         datacenter = get_obj(content, [vim.Datacenter], inputs['datacenter'])
         cluster = get_obj(content, [vim.ClusterComputeResource], inputs['cluster'])
+        print("Cluster Name is ",cluster.name)
         network_folder = datacenter.networkFolder
-
 
         # Create DV Switch
         dv_switch = create_dvSwitch(si, content, network_folder, cluster)

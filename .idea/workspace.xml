@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ae7bbe86-93d7-43d8-aebd-d4f32a410d78" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/datacenter/add_hosts_cluster.py" afterPath="$PROJECT_DIR$/datacenter/add_hosts_cluster.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/datacenter/create_dc_cluster.py" afterPath="$PROJECT_DIR$/datacenter/create_dc_cluster.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vds/create_vds.py" afterPath="$PROJECT_DIR$/vds/create_vds.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,77 +17,33 @@
     <SUITE FILE_PATH="coverage/py_vsphere_automation$delete_vds.coverage" NAME="delete_vds Coverage Results" MODIFIED="1588282233276" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/vds" />
     <SUITE FILE_PATH="coverage/py_vsphere_automation$vcsa_deploy.coverage" NAME="vcsa-deploy Coverage Results" MODIFIED="1588310872061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/deploy-vcsa" />
     <SUITE FILE_PATH="coverage/py_vsphere_automation$create_dc_cluster.coverage" NAME="create_dc_cluster Coverage Results" MODIFIED="1588653108448" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datacenter" />
-    <SUITE FILE_PATH="coverage/py_vsphere_automation$create_vds.coverage" NAME="create_vds Coverage Results" MODIFIED="1588299748232" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/vds" />
+    <SUITE FILE_PATH="coverage/py_vsphere_automation$create_vds.coverage" NAME="create_vds Coverage Results" MODIFIED="1588735242710" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/vds" />
     <SUITE FILE_PATH="coverage/py_vsphere_automation$esx_deploy.coverage" NAME="esx-deploy Coverage Results" MODIFIED="1588394485876" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/esx" />
     <SUITE FILE_PATH="coverage/py_vsphere_automation$add_hosts_cluster.coverage" NAME="add_hosts_cluster Coverage Results" MODIFIED="1588644291168" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datacenter" />
     <SUITE FILE_PATH="coverage/py_vsphere_automation$vcsa_deploy__1_.coverage" NAME="vcsa-deploy (1) Coverage Results" MODIFIED="1588634805241" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/vcsa" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.55575866">
+    <splitter split-orientation="horizontal" split-proportion="0.501355">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="create_vds.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/vds/create_vds.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="702">
-                  <caret line="167" column="16" lean-forward="false" selection-start-line="162" selection-start-column="4" selection-end-line="167" selection-end-column="16" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="create_dc_cluster.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/datacenter/create_dc_cluster.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="233">
-                  <caret line="129" column="63" lean-forward="false" selection-start-line="129" selection-start-column="63" selection-end-line="129" selection-end-column="63" />
+                <state relative-caret-position="179">
+                  <caret line="83" column="0" lean-forward="false" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
                   <folding>
-                    <element signature="e#290#303#0" expanded="true" />
+                    <element signature="e#173#186#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/esx/README.md">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-                  <folding>
-                    <marker date="1588652441896" expanded="true" signature="836:2419" ph="..." />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="esx-deploy.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/esx/esx-deploy.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="15">
-                  <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="9" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="vcsa-params.yaml" pinned="false" current-in-tab="false">
-            <entry file="file://$USER_HOME$/vcsa-params.yaml">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="253">
-                  <caret line="32" column="28" lean-forward="false" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="vcsa-deploy.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="vcsa-deploy.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/vcsa/vcsa-deploy.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="795">
-                  <caret line="56" column="0" lean-forward="false" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#0#11#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="45">
+                  <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="11" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -97,18 +55,32 @@
           <file leaf-file-name="esx-deploy.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/esx/esx-deploy.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="150">
-                  <caret line="13" column="51" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="13" selection-end-column="51" />
-                  <folding />
+                <state relative-caret-position="0">
+                  <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#0#11#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="add_hosts_cluster.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="create_dc_cluster.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/datacenter/create_dc_cluster.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2445">
+                  <caret line="163" column="0" lean-forward="false" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#290#303#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="add_hosts_cluster.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/datacenter/add_hosts_cluster.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+                <state relative-caret-position="930">
+                  <caret line="62" column="54" lean-forward="false" selection-start-line="62" selection-start-column="54" selection-end-line="62" selection-end-column="54" />
                   <folding>
                     <element signature="e#455#468#0" expanded="true" />
                   </folding>
@@ -148,15 +120,15 @@
         <option value="$PROJECT_DIR$/vds/delete_vds.py" />
         <option value="$PROJECT_DIR$/deploy-vcsa/vc.json" />
         <option value="$PROJECT_DIR$/deploy-vcsa/vcsavars.py" />
-        <option value="$PROJECT_DIR$/vds/create_vds.py" />
         <option value="$PROJECT_DIR$/deploy-vcsa/README.md" />
         <option value="$PROJECT_DIR$/deploy-vcsa/vcsa-deploy.py" />
         <option value="$PROJECT_DIR$/esx/Notes-ovftool" />
         <option value="$PROJECT_DIR$/esx/esx-deploy.py" />
         <option value="$PROJECT_DIR$/vcsa/vcsa-deploy.py" />
-        <option value="$PROJECT_DIR$/datacenter/add_hosts_cluster.py" />
         <option value="$USER_HOME$/vcsa-params.yaml" />
         <option value="$PROJECT_DIR$/datacenter/create_dc_cluster.py" />
+        <option value="$PROJECT_DIR$/datacenter/add_hosts_cluster.py" />
+        <option value="$PROJECT_DIR$/vds/create_vds.py" />
       </list>
     </option>
   </component>
@@ -167,10 +139,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="103" />
+    <option name="x" value="51" />
     <option name="y" value="23" />
-    <option name="width" value="1337" />
-    <option name="height" value="854" />
+    <option name="width" value="1350" />
+    <option name="height" value="842" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -253,7 +225,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.create_dc_cluster">
+  <component name="RunManager" selected="Python.create_vds">
     <configuration name="add_hosts_cluster" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -394,16 +366,16 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="103" y="23" width="1337" height="854" extended-state="0" />
+    <frame x="51" y="23" width="1350" height="842" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15521236" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15366973" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290461" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290461" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38722825" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22928177" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24930128" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.07757576" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -466,7 +438,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2505">
           <caret line="167" column="16" lean-forward="false" selection-start-line="162" selection-start-column="4" selection-end-line="167" selection-end-column="16" />
-          <folding />
+          <folding>
+            <element signature="e#173#186#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -474,9 +448,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1588652441896" expanded="true" signature="836:2419" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -494,9 +466,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="795">
           <caret line="56" column="0" lean-forward="true" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -512,7 +482,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="45" />
-          <folding />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -531,55 +503,55 @@
     <entry file="file://$PROJECT_DIR$/deploy-vcsa/vcsavars.py" />
     <entry file="file://$PROJECT_DIR$/deploy-vcsa/README.md" />
     <entry file="file://$PROJECT_DIR$/deploy-vcsa/vcsa-deploy.py" />
+    <entry file="file://$PROJECT_DIR$/esx/Notes-ovftool" />
+    <entry file="file://$USER_HOME$/vcsa-params.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="28" column="57" lean-forward="true" selection-start-line="28" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/esx/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1588652441896" expanded="true" signature="836:2419" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/esx/Notes-ovftool" />
-    <entry file="file://$PROJECT_DIR$/vcsa/vcsa-deploy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="795">
-          <caret line="56" column="0" lean-forward="false" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/esx/esx-deploy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="9" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/vds/create_vds.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="702">
-          <caret line="167" column="16" lean-forward="false" selection-start-line="162" selection-start-column="4" selection-end-line="167" selection-end-column="16" />
+        <state relative-caret-position="179">
+          <caret line="83" column="0" lean-forward="false" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
+          <folding>
+            <element signature="e#173#186#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vcsa/vcsa-deploy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/vcsa-params.yaml">
+    <entry file="file://$PROJECT_DIR$/esx/esx-deploy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="32" column="28" lean-forward="false" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/datacenter/add_hosts_cluster.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+        <state relative-caret-position="930">
+          <caret line="62" column="54" lean-forward="false" selection-start-line="62" selection-start-column="54" selection-end-line="62" selection-end-column="54" />
           <folding>
             <element signature="e#455#468#0" expanded="true" />
           </folding>
@@ -588,8 +560,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/datacenter/create_dc_cluster.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="129" column="63" lean-forward="false" selection-start-line="129" selection-start-column="63" selection-end-line="129" selection-end-column="63" />
+        <state relative-caret-position="2445">
+          <caret line="163" column="0" lean-forward="false" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
           <folding>
             <element signature="e#290#303#0" expanded="true" />
           </folding>
