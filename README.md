@@ -7,7 +7,7 @@ Coming Soon . . .
 
 ### Parameters file used for all individual component scripts.
 This fille should be stored in $HOME on a Linux or OSX system where the scripts will be run from.
-'''yaml
+``` yaml
 ### COMMON SETTINGS
 VLAN: '0'
 DOMAIN: 'alab.somewhere.com'
@@ -66,7 +66,7 @@ VDS_PG2_NAME: 'tep-edge'
 VDS_PG2_VLAN: 102
 VDS_PG3_NAME: 'ext-uplink-edge'
 VDS_PG3_VLAN: 103
-'''
+``` 
 
 ## Python Automation individual components
 The individual steps can be used and run individually for other use cases. Follow links below to just run a specific step.
