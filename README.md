@@ -3,11 +3,13 @@
 End to end rapid deployment tool for vSphere 7 with Kubernetes for demo, poc, or workshop purposes. Will deploy and configure a nested multi ESXi, VCSA, and WCP environment with python. 
 
 ### Instructions to deploy the environment.
+On Ubuntu 18.04 with Python3 already installed.
 ```
 git clone https://github.com/nvpnathan/py-vsphere-automation.git
 git submodule init
 git submodule update
 vi ~/vcsa-params.yaml
+pip install pyvmomi
 ```
 
 ### Parameters file used for all individual component scripts.
