@@ -9,8 +9,8 @@ import yaml
 import os
 
 from pyVmomi import vim, vmodl
-from pyvim import connect
-from pyvim.connect import Disconnect
+from pyVim import connect
+from pyVim.connect import Disconnect
 
 homedir = os.getenv('HOME')
 yaml_file = open(homedir+"/vcsa-params.yaml")
