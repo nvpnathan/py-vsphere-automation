@@ -19,7 +19,7 @@ To deploy the VCSA appliance the deployment script needs following information w
 
 ``` yaml
 ### COMMON SETTINGS
-VLAN: '0'                   # VLAN used for 
+VLAN: '0'                   # VLAN not currently used
 DOMAIN: 'domain.com'
 NTP_SERVER: 'time.domain.com'
 PARENT_VC: 'vcsa.domain.com'
