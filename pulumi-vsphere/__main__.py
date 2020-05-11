@@ -4,7 +4,7 @@ import ssl
 import socket
 import hashlib
 # Code Testing
-#pulumi.runtime.settings._set_test_mode_enabled(True)  
+pulumi.runtime.settings._set_test_mode_enabled(True)  
 
 # Pull config secrets
 config = pulumi.Config()
@@ -64,22 +64,6 @@ def create_datacenters():
     return dc_list
 create_datacenters()
 
-## Create vSphere Cluster(s)
-cluster_list = []
-def create_cluster():
-    for x in all_hosts:
-        cluster = [x['cluster']]
-        for n in cluster:
-            compCluster = vsphere.ComputeCluster(resource_name=n, datacenter_id=dc_list[0].moid,name=n,
-                drs_enabled = cl_settings["drs_enabled"],
-                drs_automation_level=cl_settings["drs_automation_level"],
-                ha_enabled = cl_settings["ha_enabled"],
-                ha_advanced_options = cl_settings["ha_advanced_options"],
-                ha_admission_control_policy = 'disabled')
-            x.update(clusterObject = compCluster)
-    return cluster_list
-create_cluster()
-
 ## Retrieve ESXi thumbprint to add to vCenter
 def get_esxi_thumbprint():
     for x in all_hosts:
@@ -100,27 +84,14 @@ get_esxi_thumbprint()
 all_host_list = []
 def add_allHosts():
     for x in all_hosts:
-        cluster = x['clusterObject']
         host = x['hosts']
         for n in host:
-            hosts = vsphere.Host(resource_name=n['name'], hostname=n['name'], cluster=cluster, username=config.require('esxiUser'), 
+            hosts = vsphere.Host(resource_name=n['name'], hostname=n['name'], datacenter=dc_list[0].moid, username=config.require('esxiUser'), 
             password=config.require_secret('esxiPassword'), thumbprint=n['thumbprint'], force=True)
             all_host_list.append(hosts)
             n.update(hostObject = hosts)
     return all_host_list
 add_allHosts()
-
-## Create Resource Pools
-rp_list = []
-def create_clusterRP():
-    for r in all_hosts:
-        rp = r['resourcePools']
-        clobject = r['clusterObject']
-        for i in rp:
-            rps = vsphere.ResourcePool(resource_name=i, name=i, parent_resource_pool_id=clobject.resource_pool_id)
-        rp_list.append(rps)
-    return rp_list
-create_clusterRP()
 
 ## Create vSphere Folders
 folder_list = []
@@ -164,6 +135,48 @@ def create_vds():
     return dvs_list
 create_vds()
 
+## Create vSphere Cluster(s)
+cluster_list = []
+def create_cluster():
+    for h in all_hosts:
+        if h.get('cluster') in ('pl-vlab-mgmt'):
+            cHosts = h.get('hosts')
+            clusterHosts = [x.get('hostObject') for x in cHosts]
+            compCluster = vsphere.ComputeCluster(resource_name=h.get('cluster'), datacenter_id=dc_list[0].moid,name=h.get('cluster'),
+                host_system_ids=clusterHosts,
+                drs_enabled = cl_settings["drs_enabled"],
+                drs_automation_level=cl_settings["drs_automation_level"],
+                ha_enabled = cl_settings["ha_enabled"],
+                ha_advanced_options = cl_settings["ha_advanced_options"],
+                ha_admission_control_policy = 'disabled')
+            h.update(clusterObject = compCluster)
+    for h in all_hosts:
+        if h.get('cluster') in ('pl-vlab-tkg'):
+            cHosts = h.get('hosts')
+            clusterHosts = [x.get('hostObject') for x in cHosts]
+            compCluster = vsphere.ComputeCluster(resource_name=h.get('cluster'), datacenter_id=dc_list[0].moid,name=h.get('cluster'),
+                host_system_ids=clusterHosts,
+                drs_enabled = cl_settings["drs_enabled"],
+                drs_automation_level=cl_settings["drs_automation_level"],
+                ha_enabled = cl_settings["ha_enabled"],
+                ha_advanced_options = cl_settings["ha_advanced_options"],
+                ha_admission_control_policy = 'disabled')
+            h.update(clusterObject = compCluster)
+    for h in all_hosts:
+        if h.get('cluster') in ('pl-vlab-workload'):
+            cHosts = h.get('hosts')
+            clusterHosts = [x.get('hostObject') for x in cHosts]
+            compCluster = vsphere.ComputeCluster(resource_name=h.get('cluster'), datacenter_id=dc_list[0].moid,name=h.get('cluster'),
+                host_system_ids=clusterHosts,
+                drs_enabled = cl_settings["drs_enabled"],
+                drs_automation_level=cl_settings["drs_automation_level"],
+                ha_enabled = cl_settings["ha_enabled"],
+                ha_advanced_options = cl_settings["ha_advanced_options"],
+                ha_admission_control_policy = 'disabled')
+            h.update(clusterObject = compCluster)
+    return cluster_list
+create_cluster()
+
 ## Create MGMT DVS PortGroups
 mgmtPGs_list = []
 def create_mgmtPG():
@@ -183,6 +196,18 @@ def create_compPG():
         mgmtPGs_list.append(mgmtpg)
     return mgmtPGs_list
 create_compPG()
+
+## Create Resource Pools
+rp_list = []
+def create_clusterRP():
+    for r in all_hosts:
+        rp = r['resourcePools']
+        clobject = r['clusterObject']
+        for i in rp:
+            rps = vsphere.ResourcePool(resource_name=i, name=i, parent_resource_pool_id=clobject.resource_pool_id)
+        rp_list.append(rps)
+    return rp_list
+create_clusterRP()
 
 ## Add Storage
 ds_list = []
