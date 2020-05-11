@@ -56,6 +56,8 @@ VC_DATACENTER: 'python-tmp-dc'
 VC_CLUSTER:  'Python Cluster'
 ```
 
+## Install 
+
 Once you have created your $HOME/vcsa-params.yaml, you can deploy the VCSA appliance with the following command.
 
 ```shell
