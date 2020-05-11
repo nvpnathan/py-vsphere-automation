@@ -42,7 +42,7 @@ VC_DATACENTER: 'python-tmp-dc'
 VC_CLUSTER:  'Python Cluster'
 ```
 
-### Run the DC creation script.
+### ## Install Requirements Run the DC creation script.
 Once you have exported the 3 ENV VARS you can create a new Datacenter and Cluster with DRS & HA enabled with the following command.
 
 ```shell
