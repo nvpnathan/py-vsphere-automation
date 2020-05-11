@@ -2,7 +2,13 @@
 
 The VCSA Appliance and ESXi hosts need to be deployed already
 
-### Export the ENV Vars.
+###  What the script does
+- Creates a new Datacenter with name from (VC_DATACENTER: )
+- Creates a new Cluster with name (VC_CLUSTER: )
+- Adds ESXi hosts to the Cluster as set in (ESX_IPS: )
+- Configure's HA / DRS
+
+### Update the YAML Configuration file.
 
 To deploy the VCSA appliance the deployment script needs following environment variables set:
 
