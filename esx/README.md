@@ -43,6 +43,12 @@ https://my.vmware.com/group/vmware/details?productId=974&downloadGroup=OVFTOOL44
 ```
 For OSX doubleclick the DMG file and accept security warning or override in System Preferences
 
+For Ubuntu, scp the OVFTOOL to the home directory. 
+```shell
+chmod 755 VMware-ovftool-4.4.0-15722219-lin.x86_64.bundle
+sudo ./VMware-ovftool-4.4.0-15722219-lin.x86_64.bundle
+```
+
 Run the ovftool 
 ```shell
 ovftool --acceptAllEulas --datastore="nfs-ubuntu-01" --name="esx7-ovftool-04" --net:"VM Network"="VM 1525" \
