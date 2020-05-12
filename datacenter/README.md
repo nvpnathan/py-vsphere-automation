@@ -52,5 +52,5 @@ VC_CLUSTER:  'Python Cluster'
 Once you have exported the 3 ENV VARS you can create a new Datacenter and Cluster with DRS & HA enabled with the following command.
 
 ```shell
-create_dc_cluster.py
+python3 ./datacenter/create_dc_cluster.py
 ```
