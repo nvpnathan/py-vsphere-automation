@@ -49,6 +49,13 @@ VC_CLUSTER:  'Python Cluster'
 ```
 
 ### ## Install Requirements Run the DC creation script.
+
+### Jumpbox requirements
+```shell
+sudo apt install python3-pip
+sudo pip3 install pyVmomi
+```
+
 Once you have exported the 3 ENV VARS you can create a new Datacenter and Cluster with DRS & HA enabled with the following command.
 
 ```shell
