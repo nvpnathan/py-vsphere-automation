@@ -1,21 +1,28 @@
 ###  Requirements
 
-The VCSA Appliance needs to be deployed already
+- You need the NSX-T 3.0 Datacenter Unified Appliance OVA downloaded
+- You need ansible installed
+- You need ovftool installed locally
+- Optional:  You need a product key for NSX-T 3.0
 
-### Export the ENV Vars.
 
-To deploy the VCSA appliance the deployment script needs following environment variables set:
+
+### Install Requirements
+
+Coming soon.
 
 ``` 
-export VCENTER_IP ='192.168.44.86'                                  # IP for VCSA Appliance
-export VCENTER_PW = 'passforvc'
-export VCENTER_USER ='administrator@vsphere.local'
 
 ```
+### Fill in the nsx-config.txt file with your environment information
 
-### Run the DC creation script.
-Once you have exported the 3 ENV VARS you can create a new Datacenter and Cluster with DRS & HA enabled with the following command.
+``` 
+vi github/py-vsphere-automation/nsx-install-wrapper/nsx-config.txt
+```
+
+### Run the NSX Install script.
+Once you have exported the 3 ENV VARS you can execute the wrapper script to Install NSX Cluster, Edge Nodes, T0 Router etc.
 
 ```shell
-create_dc_cluster.py
+python3 nsx-install.py --start
 ```

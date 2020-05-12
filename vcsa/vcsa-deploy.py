@@ -2,6 +2,7 @@ import json
 import os
 import platform
 import yaml
+import subprocess
 
 currentDirectory = os.getcwd()
 
@@ -30,6 +31,15 @@ else:
     print(f"Unfortunately {host_os} is not supported")
 
 
+## vCenter DNS validation
+try:
+    for d in cfg_yaml["VC_DNS_SERVERS"]:
+        output = subprocess.check_output(['nslookup', cfg_yaml["VC_SYSTEM_NAME"], str(d)], universal_newlines=True)
+        res = dict(map(str.strip, sub.split(':', 1)) for sub in output.split('\n') if ':' in sub)
+        if cfg_yaml["VC_IP"] != res['Address']:
+            raise ValueError("The vCenter FQDN does resolve to the IP " + cfg_yaml["VC_IP"])
+except subprocess.CalledProcessError as err:
+    raise ValueError("The vCenter FQDN is not resolving")
 
 
 data['new_vcsa']['esxi']['hostname'] = cfg_yaml["VC_ESX_HOST"]
@@ -58,7 +68,7 @@ print(data)
 with open (tempfile, 'w') as fp:
     json.dump(data, fp, indent=4)
 
-# Deploy 
+## Deploy 
 if host_os == 'Darwin':
     deployvcsa = f'"{VC_ISO_MOUNT}/VMware VCSA/vcsa-cli-installer/mac/vcsa-deploy" \
     install --verbose --accept-eula --acknowledge-ceip \
@@ -78,5 +88,8 @@ except:
     os.remove(tempfile)
 
 # Unmount
-os.system("umount /tmp/tmp_iso")
-os.system("rmdir /tmp/tmp_iso")
+if host_os == 'Darwin':
+    os.system(f"hdiutil umount {VC_ISO_MOUNT}")
+elif host_os == 'Linux':
+    os.system(f"sudo umount {VC_ISO_MOUNT}")
+

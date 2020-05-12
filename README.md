@@ -82,6 +82,6 @@ The individual steps can be used and run individually for other use cases. Follo
 3. [Datacenter & Cluster Creation & Adding Hosts](datacenter/README.md)
 4. [Distributed Switch & DVPG Creation](vds/README.md)
 5. Coming Soon-Mount NFS Datastore(nfs/README.md)
-6. Coming Soon-NSX Deployment(nsx/NSX-Deployment.md)
+6. [NSX-T 3.0 Deployment](docs/06_NSX_README.md)
 7. Coming Soon-Install NSX Logical Configuration(nsx/NSX-Logical.md)
 8. Coming Soon-Install WCP (wcp/README.md)
