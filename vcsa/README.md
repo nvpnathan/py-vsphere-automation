@@ -9,6 +9,7 @@
 - VCSA Appliance ISO
 - YAML Configuration file placed in $HOME
 - DNS A record added for the VC_SYSTEM_NAME FQDN on the DNS Server that is configured in VC_DNS_SERVERS.
+- Valid NTP Clock source configured in NTP_SERVER.
 
 IMPORTANT:  The VCSA will not come online without an A record that it can use to resolve itself upon boot.
 
