@@ -9,6 +9,9 @@ http://opensource.org/licenses/Apache-2.0
 import atexit
 import yaml
 import os
+import ssl
+import socket
+import hashlib
 
 from pyVmomi import vim, vmodl
 from pyVim import connect
@@ -18,7 +21,6 @@ from pyVim.connect import Disconnect
 homedir = os.getenv('HOME')
 yaml_file = open(homedir+"/vcsa-params.yaml")
 config = yaml.load(yaml_file, Loader=yaml.Loader)
-
 
 inputs = {'vcenter_ip': config['VC_IP'],
           'vcenter_password': config['VC_SSO_PWD'],
@@ -102,9 +104,20 @@ def add_hosts_to_vc(dc,cluster,esx_hosts,esx_user,esx_pwd):
     host_objects = []
     folder = dc.hostFolder
     for ip in esx_hosts:
+        # Get ESXi SSL thumbprints
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(1)
+        wrappedSocket = ssl.wrap_socket(sock)
+        wrappedSocket.connect((ip, 443))
+        der_cert_bin = wrappedSocket.getpeercert(True)
+        thumb_sha1 = hashlib.sha1(der_cert_bin).hexdigest()
+        thumb = ':'.join(a + b for a, b in zip(thumb_sha1[::2], thumb_sha1[1::2]))
+        print("Host thumbprint is ", thumb)
+
         connect_spec = vim.host.ConnectSpec(hostName=ip,
                                         userName=esx_user,
                                         password=esx_pwd,
+                                        sslThumbprint=thumb,
                                         force=False)
         print("Adding Host ({}) to vCenter".format(ip))
         task = folder.AddStandaloneHost(connect_spec,
@@ -116,7 +129,6 @@ def add_hosts_to_vc(dc,cluster,esx_hosts,esx_user,esx_pwd):
         #print("Created Host '{}' ({})".format(mo._moId, ip))
         print("Added Host '{}' ({} to vCenter)".format(host_mo._moId, host_mo.name))
         host_objects.append(host_mo)
-
     return host_objects
 
 
@@ -126,12 +138,6 @@ def move_hosts_to_cluster(cluster_mo, host_objects):
         WaitForTask(task)
         print("Host '{}' ({}) moved into Cluster {} ({})".
               format(host_mo, host_mo.name, cluster_mo, cluster_mo.name))
-
-        task = host_mo.ExitMaintenanceMode(30) # 30 sec timeout
-        WaitForTask(task)
-        print("Host '{}' ({}) out of maintenance mode".format(host_mo, host_mo.name))
-
-
 
 def main():
 

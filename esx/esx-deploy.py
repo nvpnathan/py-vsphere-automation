@@ -27,8 +27,8 @@ for index, ip in enumerate(esx_ips, start=1):
     print("IP ", ip)
 
     deployesx = f'"ovftool"  --acceptAllEulas --datastore="nfs-ubuntu-01" --name={vmname} --net:"VM Network"="{cfg_yaml["VC_PORTGROUP"]}" \
-    --ipAllocationPolicy="fixedAllocatedPolicy" --powerOn --prop:"guestinfo.hostname"={hostname} \
-    --prop:"guestinfo.ipaddress"={ip} --prop:"guestinfo.netmask"={cfg_yaml["ESX_NETMASK"]} \
+    --ipAllocationPolicy="fixedAllocatedPolicy" --powerOn --memorySize:"*"=16192 --numberOfCpus:"*"=8  \
+    --prop:"guestinfo.hostname"={hostname} --prop:"guestinfo.ipaddress"={ip} --prop:"guestinfo.netmask"={cfg_yaml["ESX_NETMASK"]} \
     --prop:"guestinfo.gateway"={cfg_yaml["ESX_GATEWAY"]} --prop:"guestinfo.vlan"={cfg_yaml["VLAN"]} --prop:"guestinfo.dns"={dns} \
     --prop:"guestinfo.domain"={cfg_yaml["DOMAIN"]} --prop:"guestinfo.ntp"={cfg_yaml["NTP_SERVER"]} --prop:"guestinfo.ssh"=True \
     --prop:"guestinfo.createvmfs"=True {cfg_yaml["ESX_ISO_PATH"]} \
