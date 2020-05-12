@@ -2,6 +2,7 @@ import json
 import os
 import platform
 import yaml
+import subprocess
 
 currentDirectory = os.getcwd()
 
@@ -30,6 +31,13 @@ else:
     print(f"Unfortunately {host_os} is not supported")
 
 
+## vCenter DNS validation
+try:
+    for d in cfg_yaml["VC_DNS_SERVERS"]:
+        print(subprocess.check_output(['nslookup', cfg_yaml["VC_SYSTEM_NAME"], str(d)]))
+except subprocess.CalledProcessError as err:
+    print(err)
+    raise
 
 
 data['new_vcsa']['esxi']['hostname'] = cfg_yaml["VC_ESX_HOST"]
@@ -58,7 +66,7 @@ print(data)
 with open (tempfile, 'w') as fp:
     json.dump(data, fp, indent=4)
 
-# Deploy 
+# # Deploy 
 if host_os == 'Darwin':
     deployvcsa = f'"{VC_ISO_MOUNT}/VMware VCSA/vcsa-cli-installer/mac/vcsa-deploy" \
     install --verbose --accept-eula --acknowledge-ceip \
