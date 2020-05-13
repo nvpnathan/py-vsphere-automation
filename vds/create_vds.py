@@ -71,17 +71,11 @@ def create_dvSwitch(si, content, network_folder, cluster):
     dvs_host_configs = []
     uplink_port_names = []
     dvs_create_spec = vim.DistributedVirtualSwitch.CreateSpec()
-    dvs_config_spec = vim.DistributedVirtualSwitch.ConfigSpec()
+    dvs_config_spec = vim.dvs.VmwareDistributedVirtualSwitch.ConfigSpec()
     dvs_config_spec.name = inputs['dvs_name']
-    #dvs_config_spec.maxMtu = 2000
+    dvs_config_spec.maxMtu = 1600
     dvs_config_spec.uplinkPortPolicy = vim.DistributedVirtualSwitch.NameArrayUplinkPortPolicy()
     hosts = cluster.host
-
-    VMware_dvs_config_spec = vim.VmwareDistributedVirtualSwitch.VMwareDVSConfigSpec()
-    VMware_dvs_config_spec.
-
-
-
 
     for host in cluster.host:
         print(host.name)
