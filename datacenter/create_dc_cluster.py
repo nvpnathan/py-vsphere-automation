@@ -96,9 +96,20 @@ def create_datacenter(dcname=None, service_instance=None, folder=None):
     if folder is None:
         folder = service_instance.content.rootFolder
 
-    if folder is not None and isinstance(folder, vim.Folder):
-        dc_moref = folder.CreateDatacenter(name=dcname)
+    datacenters = [entity for entity in service_instance.content.rootFolder.childEntity
+                            if hasattr(entity, 'vmFolder')]
+    try:
+        for dc in datacenters:
+            if dc.name == dcname:
+                dc_moref = dc
+                raise ValueError()
+    except(ValueError):
+        print('Datacenter already exists !')
         return dc_moref
+    else:
+        if folder is not None and isinstance(folder, vim.Folder):
+            dc_moref = folder.CreateDatacenter(name=dcname)
+            return dc_moref
 
 def add_hosts_to_vc(dc,cluster,esx_hosts,esx_user,esx_pwd):
     host_objects = []
