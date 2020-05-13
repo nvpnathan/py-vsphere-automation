@@ -1,6 +1,6 @@
 ## py-vsphere-automation
 
-End to end rapid deployment tool for vSphere 7 with Kubernetes for demo, poc, or workshop purposes. Will deploy and configure a nested multi ESXi, VCSA, and WCP environment with python. 
+End to end rapid deployment tool for vSphere 7 with Kubernetes for demo, poc, or workshop purposes. Will deploy and configure a nested multi ESXi, VCSA, NSX-T, and WCP environment with python. 
 
 ### Instructions to deploy the environment.
 On Ubuntu 18.04 with Python3 already installed.
