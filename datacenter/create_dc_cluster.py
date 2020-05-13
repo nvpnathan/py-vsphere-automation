@@ -32,6 +32,11 @@ inputs = {'vcenter_ip': config['VC_IP'],
            'esx_pwd': config['VC_ESXI_PWD']
           }
 
+
+def get_obj(content, vimtype, name = None):
+    return [item for item in content.viewManager.CreateContainerView(
+        content.rootFolder, [vimtype], recursive=True).view]
+
 def create_cluster(**kwargs):
     """
     Method to create a Cluster in vCenter
@@ -41,30 +46,41 @@ def create_cluster(**kwargs):
     cluster_name = kwargs.get("name")
     cluster_spec = kwargs.get("cluster_spec")
     datacenter = kwargs.get("datacenter")
+    service_instance = kwargs.get("service_instance")
 
     if cluster_name is None:
         raise ValueError("Missing value for name.")
     if datacenter is None:
         raise ValueError("Missing value for datacenter.")
-    if cluster_spec is None:
-        # Create Cluster Spec
-        cluster_spec = vim.cluster.ConfigSpecEx()
-        # Create HA SubSpec and add to ClusterSpec https://pubs.vmware.com/vi-sdk/visdk250/ReferenceGuide/vim.cluster.DasConfigInfo.html
-        ha_spec = vim.cluster.DasConfigInfo()
-        ha_spec.enabled = True
-        ha_spec.hostMonitoring = vim.cluster.DasConfigInfo.ServiceState.enabled
-        ha_spec.failoverLevel = 1
-        cluster_spec.dasConfig = ha_spec
-        # Create DRS subspec and add to cluster_spec https://pubs.vmware.com/vi-sdk/visdk250/ReferenceGuide/vim.cluster.DrsConfigInfo.html
-        drs_spec = vim.cluster.DrsConfigInfo()
-        drs_spec.enabled = True
-        cluster_spec.drsConfig = drs_spec
+
+    try:
+        for cl in get_obj(service_instance.content, vim.ComputeResource):
+            if cl.name == cluster_name:
+                cluster = cl
+                raise ValueError()
+    except(ValueError):
+        print('Cluster already exists !')
+        return cluster
+    else:
+        if cluster_spec is None:
+            # Create Cluster Spec
+            cluster_spec = vim.cluster.ConfigSpecEx()
+            # Create HA SubSpec and add to ClusterSpec https://pubs.vmware.com/vi-sdk/visdk250/ReferenceGuide/vim.cluster.DasConfigInfo.html
+            ha_spec = vim.cluster.DasConfigInfo()
+            ha_spec.enabled = True
+            ha_spec.hostMonitoring = vim.cluster.DasConfigInfo.ServiceState.enabled
+            ha_spec.failoverLevel = 1
+            cluster_spec.dasConfig = ha_spec
+            # Create DRS subspec and add to cluster_spec https://pubs.vmware.com/vi-sdk/visdk250/ReferenceGuide/vim.cluster.DrsConfigInfo.html
+            drs_spec = vim.cluster.DrsConfigInfo()
+            drs_spec.enabled = True
+            cluster_spec.drsConfig = drs_spec
 
 
-    host_folder = datacenter.hostFolder
-    cluster = host_folder.CreateClusterEx(name=cluster_name, spec=cluster_spec)
+        host_folder = datacenter.hostFolder
+        cluster = host_folder.CreateClusterEx(name=cluster_name, spec=cluster_spec)
 
-    return cluster
+        return cluster
 
 def create_datacenter(dcname=None, service_instance=None, folder=None):
     """
@@ -90,6 +106,7 @@ def create_datacenter(dcname=None, service_instance=None, folder=None):
     :param service_instance: ServiceInstance connection to a given vCenter
     :return:
     """
+
     if len(dcname) > 79:
         raise ValueError("The name of the datacenter must be under "
                          "80 characters.")
@@ -164,7 +181,6 @@ def main():
         try:
             print("Trying to connect to VCENTER SERVER . . .")
             si = connect.SmartConnectNoSSL('https', inputs['vcenter_ip'], 443, inputs['vcenter_user'], inputs['vcenter_password'])
-
         except IOError as e:
             pass
             atexit.register(Disconnect, si)
@@ -177,7 +193,7 @@ def main():
 
         # CREATE THE CLUSTER
         print("Creating Cluster !")
-        cluster = create_cluster(datacenter=dc, name=inputs['cluster'])
+        cluster = create_cluster(datacenter=dc, service_instance=si, name=inputs['cluster'])
 
         # ADD THE HOSTS to vCENTER
         print("Adding Hosts !")
