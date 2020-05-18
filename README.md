@@ -84,4 +84,4 @@ The individual steps can be used and run individually for other use cases. Follo
 5. Coming Soon-Mount NFS Datastore(docs/nfs_README.md)
 6. [NSX-T 3.0 Deployment](docs/nsx_README.md)
 7. Coming Soon-Install NSX Logical Configuration(nsx/NSX-Logical.md)
-8. [WCP Install & Configuration] (docs/wcp_README.md)
+8. [WCP Install & Configuration](docs/wcp_README.md)
