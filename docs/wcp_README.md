@@ -15,7 +15,7 @@ Coming soon.
 ``` 
 
 ```
-### Get your environmental information
+### Get script parameters and environmental information
 
 ``` 
 -s = 
@@ -32,11 +32,9 @@ Coming soon.
 -egress
 -prefix
 -
--
-
 ```
 
-### Run the NSX Install script.
+### Run the configure_supervisor_cluster.py Install script.
 Once you have exported the 3 ENV VARS you can execute the wrapper script to Install NSX Cluster, Edge Nodes, T0 Router etc.
 
 ```shell
