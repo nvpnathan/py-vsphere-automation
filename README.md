@@ -77,11 +77,11 @@ VDS_PG3_VLAN: 103
 
 ## Python Automation individual components
 The individual steps can be used and run individually for other use cases. Follow links below to just run a specific step.
-1. [Nested ESXi 7 OVA deployment](esx/README.md)
-2. [VCSA Appliance Deployment](vcsa/README.md)
-3. [Datacenter & Cluster Creation & Adding Hosts](datacenter/README.md)
-4. [Distributed Switch & DVPG Creation](vds/README.md)
-5. Coming Soon-Mount NFS Datastore(nfs/README.md)
+1. [Nested ESXi 7 OVA deployment](docs/esx_README.md)
+2. [VCSA Appliance Deployment](docs/vcsa_README.md)
+3. [Datacenter & Cluster Creation & Adding Hosts](docs/datacenter_README.md)
+4. [Distributed Switch & DVPG Creation](docs/vds_README.md)
+5. Coming Soon-Mount NFS Datastore(docs/nfs_README.md)
 6. [NSX-T 3.0 Deployment](docs/06_NSX_README.md)
 7. Coming Soon-Install NSX Logical Configuration(nsx/NSX-Logical.md)
-8. Coming Soon-Install WCP (wcp/README.md)
+8. Coming Soon-Install WCP (docs/wcp_README.md)
