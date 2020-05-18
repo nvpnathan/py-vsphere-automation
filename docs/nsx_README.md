@@ -1,3 +1,6 @@
+###  Note
+- For now we are relying on the following REPO (https://github.com/madhukark/nsx-install-wrapper) which provides a Python wrapper around Ansible Playbooks.  This is configured as a submodule in our Repo and configuration inputs are separate from yaml configuration file used for other automation pieces.
+
 ###  Requirements
 
 - You need the NSX-T 3.0 Datacenter Unified Appliance OVA downloaded
