@@ -39,5 +39,5 @@ inputs = {'vcenter_ip': os.environ.get('VCENTER_IP'),
 Once you have exported the 3 ENV VARS and updated inputs in the script you can run with the following:
 
 ```shell
-python3 ./vds/ create_vds.py
+python3 ./vsphere/ create_vds.py
 ```
