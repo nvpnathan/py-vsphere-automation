@@ -184,6 +184,6 @@ def main():
         return 1
 
 
-# Start program
+# Start program if run standalone
 if __name__ == '__main__':
     main()

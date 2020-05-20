@@ -93,3 +93,8 @@ if host_os == 'Darwin':
 elif host_os == 'Linux':
     os.system(f"sudo umount {VC_ISO_MOUNT}")
 
+
+
+# Start program if run standalone
+if __name__ == '__main__':
+    main()
