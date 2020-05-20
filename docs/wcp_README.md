@@ -38,7 +38,10 @@ Coming soon.
 Once you have exported the 3 ENV VARS you can execute the wrapper script to Install NSX Cluster, Edge Nodes, T0 Router etc.
 
 ```shell
-python3 configure_supervisor_cluster.py -s "10.193.245.14" -u "administrator@vsphere.local" -cl "Workload-Cluster" -mnw "DVPG-Management Network" -sip "10.193.245.45" -sm "255.255.255.0" -gw "10.193.245.1" -dns "10.192.2.10" -ntp "10.192.2.5 " -sp "pacific-gold-storage-policy" -ingress "10.193.254.128" -egress "10.193.245.64" -prefix 26
+python3 configure_supervisor_cluster.py -s "10.193.245.14" -u "administrator@vsphere.local" \
+-cl "Workload-Cluster" -mnw "DVPG-Management Network" -sip "10.193.245.45" -sm "255.255.255.0" \
+-gw "10.193.245.1" -dns "10.192.2.10" -ntp "10.192.2.5 " -sp "pacific-gold-storage-policy" \
+-ingress "10.193.254.128" -egress "10.193.245.64" -prefix 26
     Enter VC password:
     Session creation is successful
     cluster-id::domain-c8
