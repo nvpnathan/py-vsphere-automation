@@ -21,7 +21,7 @@ IMPORTANT:  The VCSA will not come online without an A record that it can use to
 
 ## Creating updating parameters in the YAML Configuration file.
 
-To deploy the VCSA appliance the deployment script needs following information which should be set in ~/vcsa-params.yaml in following format:
+To deploy the VCSA appliance the deployment script needs following information which should be set in ~/vsphere_config.yaml in following format:
 
 ``` yaml
 ### COMMON SETTINGS
@@ -97,7 +97,7 @@ WCP_STORAGEPOLICY:
 
 ## Install 
 
-Once you have created your $HOME/vcsa-params.yaml, you can create an entire new nested vSphere environment with the following command.
+Once you have created your $HOME/vsphere_config.yaml, you can create an entire new nested vSphere environment with the following command.
 
 ```shell
 python3 ./vsphere/setup_vsphere.py
