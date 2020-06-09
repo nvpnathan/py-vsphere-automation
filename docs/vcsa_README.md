@@ -62,6 +62,6 @@ VC_CLUSTER:  'Python Cluster'
 Once you have created your $HOME/vcsa-params.yaml, you can deploy the VCSA appliance with the following command.
 
 ```shell
-python3 ./vcsa/vcsa-deploy.py
+python3 ./vsphere/vcsa-deploy.py
 ```
 

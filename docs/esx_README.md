@@ -27,7 +27,7 @@ Run the esx-deploy.py script
 ```shell
 pwd
 /Users/<user>/gitHub/py-vsphere-automation
-python3 ./esx/esx-deploy.py
+python3 ./vsphere/esx-deploy.py
 ```
 
 
