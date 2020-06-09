@@ -74,14 +74,20 @@ VDS_PG2_VLAN: 102
 VDS_PG3_NAME: 'ext-uplink-edge'
 VDS_PG3_VLAN: 103
 ``` 
+## vSphere 7 with Kubernetes Python Installation 
+After you fill out the parameters file, the fastest way to stand up a LAB or POC environment, is to run the following three scripts in order.
+1. [Install & Configure nested vSphere environment for Kubernetes](docs/setup_vsphere.md)
+2. [NSX-T 3.0 Deployment](docs/nsx_README.md)
+3. Coming Soon-Install NSX Logical Configuration(nsx/NSX-Logical.md)
+4. [WCP Install & Configuration](docs/wcp_README.md)
 
 ## Python Automation individual components
-The individual steps can be used and run individually for other use cases. Follow links below to just run a specific step.
+For more ganular needs, the individual steps can be used and run individually for other use cases. Follow links below to just run a specific step.
 1. [Nested ESXi 7 OVA deployment](docs/esx_README.md)
 2. [VCSA Appliance Deployment](docs/vcsa_README.md)
 3. [Datacenter & Cluster Creation & Adding Hosts](docs/datacenter_README.md)
 4. [Distributed Switch & DVPG Creation](docs/vds_README.md)
-5. Coming Soon-Mount NFS Datastore(docs/nfs_README.md)
+5. [Coming Soon-vSAN installation](docs/vsan_README.md)
 6. [NSX-T 3.0 Deployment](docs/nsx_README.md)
 7. Coming Soon-Install NSX Logical Configuration(nsx/NSX-Logical.md)
 8. [WCP Install & Configuration](docs/wcp_README.md)
