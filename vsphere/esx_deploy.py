@@ -1,4 +1,8 @@
-import json
+#!/usr/bin/env python
+
+"""
+
+"""
 import os
 import platform
 import yaml
@@ -17,14 +21,14 @@ esx_ips = cfg_yaml["ESX_IPS"]
 esx_network = cfg_yaml["VC_PORTGROUP"]
 dns = cfg_yaml["VC_DNS_SERVERS"][0]
 vm_prefix = cfg_yaml["ESX_VM_NAME_PREFIX"]
+hostname_prefix = cfg_yaml["ESX_VM_HOSTNAME_PREFIX"]
 
 
-
-def deploy(esx_ips,esx_network,vm_prefix, dns):
-
+def deploy(esx_ips,vm_prefix,hostname_prefix, dns):
+    esxhosts_deployed = []
     for index, ip in enumerate(esx_ips, start=1):
-        vmname = +str(index)
-        hostname = cfg_yaml["ESX_VM_HOSTNAME_PREFIX"]+str(index)
+        vmname = vm_prefix + str(index)
+        hostname = hostname_prefix + str(index)
         print("\n Working on ESX host #", index)
         print("Hostname ", hostname)
         print("VMName ", vmname)
@@ -43,12 +47,14 @@ def deploy(esx_ips,esx_network,vm_prefix, dns):
             print(deployesx, "\n")
             os.system(deployesx)
             print("Finished ESXi host #", index)
-
+            esxhosts_deployed.append(hostname)
         except:
             print("FAILED on ESXi host #", index)
+    return esxhosts_deployed
 
 def main():
-
+    hosts = deploy(esx_ips, vm_prefix, hostname_prefix, dns)
+    print("Successfully deployed the following ESX hosts ", hosts)
 
 # Start program if run standalone
 if __name__ == '__main__':
