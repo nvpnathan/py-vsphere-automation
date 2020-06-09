@@ -13,7 +13,7 @@ pip install pyvmomi
 ```
 
 ### Parameters file used for all individual component scripts.
-This fille should be stored in $HOME on a Linux or OSX system where the scripts will be run from.
+Fill in the parameters file named vsphere_config.yaml. This fille should be stored in $HOME on a Linux or OSX system where the scripts will be run from.
 ``` yaml
 ### COMMON SETTINGS
 VLAN: '0'
@@ -49,7 +49,6 @@ VC_ISO_MOUNT: "/tmp/tmp_iso"
 
 VC_DATACENTER: 'python-tmp-dc'
 VC_CLUSTER:  'Python Cluster'
-
 
 ### Section for esx-deploy.py
 ESX_VM_NAME_PREFIX: "py-esx7-"
