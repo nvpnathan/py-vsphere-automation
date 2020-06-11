@@ -14,7 +14,7 @@ homedir = os.getenv('HOME')
 print("HOMEDIR is ", homedir)
 
 
-yaml_file = open(homedir+"/vcsa-params.yaml")
+yaml_file = open(homedir+"/vsphere_config.yaml")
 cfg_yaml = yaml.load(yaml_file, Loader=yaml.Loader)
 print(cfg_yaml["ESX_IPS"])
 esx_ips = cfg_yaml["ESX_IPS"]
