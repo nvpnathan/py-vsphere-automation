@@ -13,7 +13,7 @@ from pyVim import connect
 from pyVim.connect import Disconnect
 
 homedir = os.getenv('HOME')
-yaml_file = open(homedir+"/vcsa-params.yaml")
+yaml_file = open(homedir+"/vsphere_config.yaml")
 config = yaml.load(yaml_file, Loader=yaml.Loader)
 
 inputs = {'vcenter_ip': config['VC_IP'],

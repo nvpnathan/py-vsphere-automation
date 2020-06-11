@@ -11,7 +11,7 @@ tempfile = '/tmp/vcsa_cfg.json'
 homedir = os.getenv('HOME')
 print("HOMEDIR is ", homedir)
 
-yaml_file = open(homedir+"/vcsa-params.yaml")
+yaml_file = open(homedir+"/vsphere_config.yaml")
 cfg_yaml = yaml.load(yaml_file, Loader=yaml.Loader)
 
 VC_ISO_MOUNT = cfg_yaml["VC_ISO_MOUNT"]
