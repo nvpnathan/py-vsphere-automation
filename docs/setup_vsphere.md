@@ -5,8 +5,8 @@
 
 - This repo 
 - Python 3.6.x +
-- Python libraries - pyyaml, pyvmomi, vsanapiutils, platform
-- VCSA Appliance ISO
+- Python libraries - pyyaml, pyvmomi, vsanapiutils
+- VCSA 7.0 Appliance ISO
 - ESXi 7.0 OVA from William Lam's Blog
 - ovftool installed
 - Target(parent) physical ESXi host must be version 6.7 or higher
