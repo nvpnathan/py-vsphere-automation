@@ -75,14 +75,14 @@ def create_dvSwitch(si, content, network_folder, cluster):
     dvs_config_spec.name = inputs['dvs_name']
     dvs_config_spec.maxMtu = 1600
     dvs_config_spec.uplinkPortPolicy = vim.DistributedVirtualSwitch.NameArrayUplinkPortPolicy()
-    hosts = cluster.host
+    if len(cluster.host) <= 0:
+        print("No hosts found in cluster - ", cluster.name)
+
+    for x in range(len(cluster.host)):
+        print(cluster.host[x])
+        uplink_port_names.append("Uplink %d" % x)  ## Changed to (Uplink x) so NSX Install will work
 
     for host in cluster.host:
-        print(host.name)
-
-    for x in range(len(hosts)):
-        uplink_port_names.append("Uplink %d" % x)  ## Changed to (Uplink x) so NSX Install will work
-    for host in hosts:
         print("Working on host", host.name)
         dvs_config_spec.uplinkPortPolicy.uplinkPortName = uplink_port_names
         dvs_config_spec.maxPorts = 2000
@@ -149,6 +149,8 @@ def main():
             print("Trying to connect to VCENTER SERVER . . .")
             si = connect.SmartConnectNoSSL('https', inputs['vcenter_ip'], 443, inputs['vcenter_user'], inputs['vcenter_password'])
         except IOError as e:
+            print("Error connecting to vCenter !", inputs['vcenter_ip'])
+            print("Error is: ", e)
             pass
             atexit.register(Disconnect, si)
 

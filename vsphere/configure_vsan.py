@@ -51,7 +51,8 @@ def wait_for_task(task, actionName='job', hideResult=False):
     """
 
     while task.info.state == vim.TaskInfo.State.running:
-        time.sleep(2)
+        print("Waiting for task completion. . . ")
+        time.sleep(20)
 
     if task.info.state == vim.TaskInfo.State.success:
         if task.info.result is not None and not hideResult:
@@ -112,12 +113,10 @@ def enable_vsan_vmknic(si, vmkernel_nic, cluster):
     for host in hosts:
         print('Enable vSAN traffic on host {} with {}'.format(hostProps[host]['name'], vmkernel_nic))
         task = hostProps[host]['configManager.vsanSystem'].UpdateVsan_Task(configInfo)
-        wait_for_task(task)
+        tasks.append(task)
 
-    # Can make this faster by running tasks concurrently see below scratch code
-    #tasks.append(task)
     # Execute the tasks
-    #vsanapiutils.WaitForTasks(tasks, si)
+    vsanapiutils.WaitForTasks(tasks, si)
 
     # Build vsanReconfigSpec step by step. It takes effect only after calling the VsanClusterReconfig method
     clusterConfig = vim.VsanClusterConfigInfo(enabled=True)
@@ -160,6 +159,8 @@ def main():
             print("Trying to connect to VCENTER SERVER . . .")
             si = connect.SmartConnectNoSSL('https', inputs['vcenter_ip'], 443, inputs['vcenter_user'], inputs['vcenter_password'])
         except IOError as e:
+            print("Error connecting to vCenter !", inputs['vcenter_ip'])
+            print("Error is: ", e)
             pass
             atexit.register(Disconnect, si)
 

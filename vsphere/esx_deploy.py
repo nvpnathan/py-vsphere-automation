@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 """
-
 """
 import os
 import platform
@@ -13,7 +12,6 @@ host_os = platform.system()
 homedir = os.getenv('HOME')
 print("HOMEDIR is ", homedir)
 
-
 yaml_file = open(homedir+"/vsphere_config.yaml")
 cfg_yaml = yaml.load(yaml_file, Loader=yaml.Loader)
 print(cfg_yaml["ESX_IPS"])
@@ -22,7 +20,6 @@ esx_network = cfg_yaml["VC_PORTGROUP"]
 dns = cfg_yaml["VC_DNS_SERVERS"][0]
 vm_prefix = cfg_yaml["ESX_VM_NAME_PREFIX"]
 hostname_prefix = cfg_yaml["ESX_VM_HOSTNAME_PREFIX"]
-
 
 def deploy(esx_ips,vm_prefix,hostname_prefix, dns):
     esxhosts_deployed = []

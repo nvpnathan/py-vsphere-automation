@@ -10,8 +10,8 @@ import vsphere.vcsa_deploy
 
 
 def main():
-    vsphere.esx_deploy.main()
-    vsphere.vcsa_deploy.deploy_vcsa()
+    #vsphere.esx_deploy.main()
+    vsphere.vcsa_deploy.main()
     vsphere.create_dc_cluster.main()
     vsphere.create_vds.main()
 

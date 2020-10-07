@@ -20,16 +20,16 @@ from pyVim.connect import Disconnect
 
 homedir = os.getenv('HOME')
 yaml_file = open(homedir+"/vsphere_config.yaml")
-config = yaml.load(yaml_file, Loader=yaml.Loader)
+cfg_yaml = yaml.load(yaml_file, Loader=yaml.Loader)
 
-inputs = {'vcenter_ip': config['VC_IP'],
-          'vcenter_password': config['VC_SSO_PWD'],
+inputs = {'vcenter_ip': cfg_yaml['VC_IP'],
+          'vcenter_password': cfg_yaml['VC_SSO_PWD'],
           'vcenter_user': 'administrator@vsphere.local',
-          'datacenter': config['VC_DATACENTER'],
-          'cluster': config['VC_CLUSTER'],
-          'esx_hosts': config['ESX_IPS'],
-          'esx_user': config['VC_ESXI_USR'],
-           'esx_pwd': config['VC_ESXI_PWD']
+          'datacenter': cfg_yaml['VC_DATACENTER'],
+          'cluster': cfg_yaml['VC_CLUSTER'],
+          'esx_hosts': cfg_yaml['ESX_IPS'],
+          'esx_user': cfg_yaml['VC_ESXI_USR'],
+           'esx_pwd': cfg_yaml['VC_ESXI_PWD']
           }
 
 
@@ -59,7 +59,7 @@ def create_cluster(**kwargs):
                 cluster = cl
                 raise ValueError()
     except(ValueError):
-        print('Cluster already exists !')
+        print('Cluster already exists with that name, ', cluster_name)
         return cluster
     else:
         if cluster_spec is None:
@@ -77,44 +77,29 @@ def create_cluster(**kwargs):
             cluster_spec.drsConfig = drs_spec
 
 
-        host_folder = datacenter.hostFolder
+    host_folder = datacenter.hostFolder
+    try:
         cluster = host_folder.CreateClusterEx(name=cluster_name, spec=cluster_spec)
+        raise ValueError()
+    except(ValueError):
+        print('Could NOT create the cluster !')
 
-        return cluster
+    return cluster
 
 def create_datacenter(dcname=None, service_instance=None, folder=None):
-    """
-    Creates a new datacenter with the given name.
-    Any % (percent) character used in this name parameter must be escaped,
-    unless it is used to start an escape sequence. Clients may also escape
-    any other characters in this name parameter.
-    An entity name must be a non-empty string of
-    less than 80 characters. The slash (/), backslash (\) and percent (%)
-    will be escaped using the URL syntax. For example, %2F
-    This can raise the following exceptions:
-    vim.fault.DuplicateName
-    vim.fault.InvalidName
-    vmodl.fault.NotSupported
-    vmodl.fault.RuntimeFault
-    ValueError raised if the name len is > 79
-    https://github.com/vmware/pyvmomi/blob/master/docs/vim/Folder.rst
-    Required Privileges
-    Datacenter.Create
-    :param folder: Folder object to create DC in. If None it will default to
-                   rootFolder
-    :param dcname: Name for the new datacenter.
-    :param service_instance: ServiceInstance connection to a given vCenter
-    :return:
-    """
+    #dcname = kwargs.get("dcname")
+    #service_instance = kwargs.get("service_instance")
+    print('dcname !', dcname)
+    print('service_instance !', service_instance.content.about.name)
+    print('folder !', folder)
 
     if len(dcname) > 79:
-        raise ValueError("The name of the datacenter must be under "
-                         "80 characters.")
-    if folder is None:
-        folder = service_instance.content.rootFolder
+        raise ValueError("The name of the datacenter must be under 80 characters.")
 
+    folder = service_instance.content.rootFolder
+    print('Obtained the root folder !')
     datacenters = [entity for entity in service_instance.content.rootFolder.childEntity
-                            if hasattr(entity, 'vmFolder')]
+                           if hasattr(entity, 'vmFolder')]
     try:
         for dc in datacenters:
             if dc.name == dcname:
@@ -126,6 +111,7 @@ def create_datacenter(dcname=None, service_instance=None, folder=None):
     else:
         if folder is not None and isinstance(folder, vim.Folder):
             dc_moref = folder.CreateDatacenter(name=dcname)
+            print('Datacenter created !')
             return dc_moref
 
 def add_hosts_to_vc(dc,cluster,esx_hosts,esx_user,esx_pwd):
@@ -181,12 +167,15 @@ def main():
         try:
             print("Trying to connect to VCENTER SERVER . . .")
             si = connect.SmartConnectNoSSL('https', inputs['vcenter_ip'], 443, inputs['vcenter_user'], inputs['vcenter_password'])
+            print("Connected to VCENTER SERVER !", si.content.about.name)
         except IOError as e:
+            print("Error connecting to vCenter !", inputs['vcenter_ip'])
+            print("Error is: ", e)
             pass
             atexit.register(Disconnect, si)
 
         print("Connected to VCENTER SERVER !")
-
+        content = si.RetrieveContent()
         # CREATE THE DATACENTER
         print("Creating Datacenter !")
         dc = create_datacenter(dcname=inputs['datacenter'], service_instance=si)
